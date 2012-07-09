@@ -1,6 +1,8 @@
 package net.zoogon.astrolog;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -72,6 +74,44 @@ public class AstrologDBOpenHelper extends SQLiteOpenHelper {
 	private void cleanUP(SQLiteDatabase db) {
 		//TODO
 		//db.execSQL("DELETE FROM " + DATABASE_SESSIONS_TABLE);
+
+	}
+	
+	public Cursor sampleQuery() {
+		long id_inserted;
+		//we make a sample insert
+		
+		id_inserted = sampleInsert();
+		
+		// Specify the result column projection. Return the minimum set
+		// of columns required to satisfy your requirements.
+		String[] result_columns = new String[] { SESSION_ID, SESSION_TITLE,
+				SESSION_DATE, SESSION_LOCATION, SESSION_NOTES };
+		// Specify the where clause that will limit our results.
+		String where = SESSION_ID + "=" + id_inserted;
+		// Replace these with valid SQL statements as necessary.
+		String whereArgs[] = null;
+		String groupBy = null;
+		String having = null;
+		String order = null;
+		SQLiteDatabase db = getWritableDatabase();
+		Cursor cursor = db.query(DATABASE_SESSIONS_TABLE, result_columns,
+				where, whereArgs, groupBy, having, order);
+		return cursor;
+	}
+	
+	private long sampleInsert(){
+		// Create a new row of values to insert.
+		ContentValues newValues = new ContentValues();
+		// Assign values for each row.
+		newValues.put(SESSION_TITLE, "title_sample");
+		newValues.put(SESSION_DATE, "date_sample");
+		newValues.put(SESSION_LOCATION, "location_sample");
+		newValues.put(SESSION_NOTES, "notes_sample");
+
+		// Insert the row into your table
+		SQLiteDatabase db = getWritableDatabase();
+		return db.insert(DATABASE_SESSIONS_TABLE, null, newValues);
 
 	}
 }

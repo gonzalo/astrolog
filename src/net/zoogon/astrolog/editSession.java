@@ -2,7 +2,10 @@ package net.zoogon.astrolog;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.view.Menu;
+
 public class editSession extends Activity {
 
     @Override
@@ -17,5 +20,8 @@ public class editSession extends Activity {
         return true;
     }
 
+    public void onSave(){
+    	Log.w("editSession activity","trying to query DB");
+    }
     
 }
