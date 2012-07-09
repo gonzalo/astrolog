@@ -1,8 +1,7 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.zoogon.astrolog"
+<manifest package="net.zoogon.astrolog"
     android:installLocation="preferExternal"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-sdk
         android:minSdkVersion="10"
@@ -25,6 +24,7 @@
             android:name=".editSession"
             android:label="@string/title_activity_edit_session" >
         </activity>
+        
     </application>
 
 </manifest>
