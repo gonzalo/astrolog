@@ -3,16 +3,10 @@ package net.zoogon.astrolog;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-import android.support.v4.app.NavUtils;
-
 @SuppressLint({ "ParserError", "ParserError", "ParserError" })
 public class MainActivity extends Activity {
 
@@ -47,7 +41,6 @@ public class MainActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		String message = "";
-		Resources myResources = getResources();
 
 		switch (requestCode) {
 		case ADD_SESSION_REQUEST:
