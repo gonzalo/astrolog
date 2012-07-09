@@ -1,0 +1,21 @@
+<resources>
+
+    <string name="app_name">AstroLog</string>
+    <string name="app_description">Astronomy logging tool to register your observing sessions.</string>
+    <string name="title_activity_main">Astrolog - Sessions list</string>
+    <string name="hello_world">Hello world!</string>
+
+    <!-- String space for menu -->
+    <string name="menu_settings">Settings</string>
+    <string name="add_session">Nueva sesión</string>
+
+    <!-- String space for main activity -->
+    <string name="summary_example">3 sesiones y 20 objetos</string>
+    <string name="title_activity_edit_session">Detalles de la sesión</string>
+    <string name="title">Título</string>
+    <string name="date">Fecha</string>
+    <string name="location">Localización</string>
+    <string name="notes">Notas</string>
+    <string name="save">Guardar</string>
+    
+</resources>
