@@ -71,6 +71,7 @@ public class AstrologDBOpenHelper extends SQLiteOpenHelper {
 	 * needed.
 	 */
 
+	@SuppressWarnings("unused")
 	private void cleanUP() {
 		SQLiteDatabase db = getWritableDatabase();
 		db.execSQL("DELETE FROM " + DATABASE_SESSIONS_TABLE);

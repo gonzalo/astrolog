@@ -2,7 +2,7 @@
 
     <string name="app_name">AstroLog</string>
     <string name="app_description">Astronomy logging tool to register your observing sessions.</string>
-    
+
     <!-- String space for main activity -->
     <string name="title_activity_main">Astrolog - Sessions list</string>
     <string name="message_done">Done!</string>
@@ -21,5 +21,7 @@
     <string name="location">Location</string>
     <string name="notes">Notes</string>
     <string name="save">Save</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_list_sessions">ListSessions</string>
 
 </resources>
