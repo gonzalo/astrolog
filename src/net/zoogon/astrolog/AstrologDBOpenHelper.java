@@ -11,18 +11,18 @@ import android.util.Log;
 public class AstrologDBOpenHelper extends SQLiteOpenHelper {
 
 	// DB schema metadata
-	private static final String DATABASE_NAME = "AstrologDB.db";
-	private static final int DATABASE_VERSION = 1;
+	public static final String DATABASE_NAME = "AstrologDB.db";
+	public static final int DATABASE_VERSION = 1;
 
 	// DB table names
-	private static final String DATABASE_SESSIONS_TABLE = "sessions";
+	public static final String DATABASE_SESSIONS_TABLE = "sessions";
 
 	// DB columns names
-	private static final String SESSION_ID = "_id";
-	private static final String SESSION_TITLE = "title";
-	private static final String SESSION_DATE = "date";
-	private static final String SESSION_LOCATION = "location";
-	private static final String SESSION_NOTES = "notes";
+	public static final String SESSION_ID = "_id";
+	public static final String SESSION_TITLE = "title";
+	public static final String SESSION_DATE = "session_date";
+	public static final String SESSION_LOCATION = "location";
+	public static final String SESSION_NOTES = "notes";
 
 	// DB schema creation
 	private static final String DATABASE_CREATE = "create table "
@@ -79,17 +79,13 @@ public class AstrologDBOpenHelper extends SQLiteOpenHelper {
 	}
 	
 	public Cursor sampleQuery() {
-		long id_inserted;
-		//we make a sample insert
-		
-		id_inserted = sampleInsert();
 		
 		// Specify the result column projection. Return the minimum set
 		// of columns required to satisfy your requirements.
 		String[] result_columns = new String[] { SESSION_ID, SESSION_TITLE,
 				SESSION_DATE, SESSION_LOCATION, SESSION_NOTES };
 		// Specify the where clause that will limit our results.
-		String where = SESSION_ID + "=" + id_inserted;
+		String where = null;
 		// Replace these with valid SQL statements as necessary.
 		String whereArgs[] = null;
 		String groupBy = null;
@@ -101,7 +97,7 @@ public class AstrologDBOpenHelper extends SQLiteOpenHelper {
 		return cursor;
 	}
 	
-	private long sampleInsert(){
+	private long sampleInsert(SQLiteDatabase db){
 		// Create a new row of values to insert.
 		ContentValues newValues = new ContentValues();
 		// Assign values for each row.
@@ -111,7 +107,6 @@ public class AstrologDBOpenHelper extends SQLiteOpenHelper {
 		newValues.put(SESSION_NOTES, "notes_sample");
 
 		// Insert the row into your table
-		SQLiteDatabase db = getWritableDatabase();
 		return db.insert(DATABASE_SESSIONS_TABLE, null, newValues);
 
 	}
