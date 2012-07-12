@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".editSession"
+            android:name=".EditSession"
             android:label="@string/title_activity_edit_session" >
         </activity>
 

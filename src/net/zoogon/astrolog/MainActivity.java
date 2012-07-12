@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -19,15 +19,25 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 
 	public static final int ADD_SESSION_REQUEST = 1;
+	AstrologDBOpenHelper astrologDBOpenHelper;
+	SQLiteDatabase db;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		
+		Log.w(ACTIVITY_SERVICE, "MainActivity starting");
+				
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		// DBHelper creation and DB connection
+		astrologDBOpenHelper = new AstrologDBOpenHelper(this, AstrologDBOpenHelper.DATABASE_NAME, null, AstrologDBOpenHelper.DATABASE_VERSION);
+		db = astrologDBOpenHelper.getWritableDatabase();
+
+		
 		List<String> values = new ArrayList<String>();
 
-		Cursor sCursor = getSessions();
+		Cursor sCursor = getSessions(db);
 
 		int columnIndex = sCursor
 				.getColumnIndexOrThrow(AstrologDBOpenHelper.SESSION_TITLE);
@@ -58,7 +68,13 @@ public class MainActivity extends Activity {
 		// Assign adapter to ListView
 		listView.setAdapter(adapter);
 
+		// close cursor
 		sCursor.close();
+		// close DB
+		db.close();
+		// close helper
+		astrologDBOpenHelper.close();
+		
 	}
 
 	@Override
@@ -73,7 +89,8 @@ public class MainActivity extends Activity {
 	 * @param view
 	 */
 	public void addSession(View view) {
-		Intent intent = new Intent(this, editSession.class);
+		Intent intent = new Intent(this, EditSession.class);
+		intent.putExtra("session_id", EditSession.CREATE_SESSION);
 		startActivityForResult(intent, ADD_SESSION_REQUEST);
 	}
 
@@ -126,37 +143,14 @@ public class MainActivity extends Activity {
 		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 	}
 
-	private Cursor getSessions() {
+	private Cursor getSessions(SQLiteDatabase db) {
 
-		// DBHelper creation
-		AstrologDBOpenHelper astrologDBOpenHelper = new AstrologDBOpenHelper(
-				this, AstrologDBOpenHelper.DATABASE_NAME, null,
-				AstrologDBOpenHelper.DATABASE_VERSION);
-
-		// retrieve DB
-		SQLiteDatabase db = astrologDBOpenHelper.getWritableDatabase();
-
-		//insert a value to be sure that there is content
-		ContentValues newValues = new ContentValues();
-		// Assign values for each row.
-		newValues.put(AstrologDBOpenHelper.SESSION_TITLE, "title_sample");
-		newValues.put(AstrologDBOpenHelper.SESSION_DATE, "date_sample");
-		newValues.put(AstrologDBOpenHelper.SESSION_LOCATION, "location_sample");
-		newValues.put(AstrologDBOpenHelper.SESSION_NOTES, "notes_sample");
-
-		// Insert the row into your table
-		long insertedIndex = db.insert(AstrologDBOpenHelper.DATABASE_SESSIONS_TABLE, null, newValues);		
-		
-		popUp("Inserted index = " + insertedIndex);
-		
-		
 		// configuring query
 		// Specify the result column projection. Return the minimum set
 		// of columns required to satisfy your requirements.
 		String[] result_columns = new String[] {
 				AstrologDBOpenHelper.SESSION_ID,
-				AstrologDBOpenHelper.SESSION_TITLE,
-				AstrologDBOpenHelper.SESSION_DATE };
+				AstrologDBOpenHelper.SESSION_TITLE };
 		String where = null;
 		String whereArgs[] = null;
 		String groupBy = null;
@@ -166,12 +160,13 @@ public class MainActivity extends Activity {
 		// execute query
 		Cursor cursor = db.query(AstrologDBOpenHelper.DATABASE_SESSIONS_TABLE,
 				result_columns, where, whereArgs, groupBy, having, order);
+		int SESSION_ID_COLUMN_INDEX = cursor.getColumnIndexOrThrow(AstrologDBOpenHelper.SESSION_ID);
 
-		// close DB
-		db.close();
-
-		// close helper
-		astrologDBOpenHelper.close();
+		
+		while (cursor.moveToNext()) {
+			Log.w("database", "session row id" + cursor.getInt(SESSION_ID_COLUMN_INDEX));					
+		}
+		cursor.moveToFirst();
 
 		// return result
 		return cursor;

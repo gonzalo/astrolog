@@ -96,18 +96,4 @@ public class AstrologDBOpenHelper extends SQLiteOpenHelper {
 				where, whereArgs, groupBy, having, order);
 		return cursor;
 	}
-	
-	private long sampleInsert(SQLiteDatabase db){
-		// Create a new row of values to insert.
-		ContentValues newValues = new ContentValues();
-		// Assign values for each row.
-		newValues.put(SESSION_TITLE, "title_sample");
-		newValues.put(SESSION_DATE, "date_sample");
-		newValues.put(SESSION_LOCATION, "location_sample");
-		newValues.put(SESSION_NOTES, "notes_sample");
-
-		// Insert the row into your table
-		return db.insert(DATABASE_SESSIONS_TABLE, null, newValues);
-
-	}
 }
