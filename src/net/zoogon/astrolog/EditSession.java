@@ -1,5 +1,8 @@
 package net.zoogon.astrolog;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.ContentValues;
@@ -15,8 +18,12 @@ public class EditSession extends Activity {
 
 	public static final int ADD_SESSION_REQUEST = 1;
 	public static final int CREATE_SESSION = -1;
-	
+
 	private int session_id;
+
+	private String title;
+	private String location;
+	private String notes;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -26,24 +33,24 @@ public class EditSession extends Activity {
 		// check if main activity wants to create a new session
 		// or edit an existing one
 		session_id = getIntent().getExtras().getInt("session_id");
-		
+
 		if (session_id != CREATE_SESSION)
 			loadSession(session_id);
-		//else
-			//loadDefaultValues();
+		// else
+		// loadDefaultValues();
 
 	}
 
 	private void loadDefaultValues() {
 		Log.w("EditSession", "New session, setting default values");
-		
+
 		EditText tf_to_fill;
 		tf_to_fill = (EditText) findViewById(R.id.tf_title);
 		tf_to_fill.setText(getText(R.string.title));
-		
+
 		tf_to_fill = (EditText) findViewById(R.id.tf_location);
 		tf_to_fill.setText(getText(R.string.location));
-		
+
 		tf_to_fill = (EditText) findViewById(R.id.tf_notes);
 		tf_to_fill.setText(getText(R.string.notes));
 
@@ -83,7 +90,8 @@ public class EditSession extends Activity {
 
 		EditText tf_to_validate;
 
-		// TODO validate date
+		// ¿validate date?
+		// seems it's not necessary
 
 		// Title not empty
 		tf_to_validate = (EditText) findViewById(R.id.tf_title);
@@ -117,19 +125,30 @@ public class EditSession extends Activity {
 			switch (session_id) {
 			case CREATE_SESSION:
 				Log.w("editSession", "Inserting new record on SESSIONS table");
+				
+				//get input values
 				ContentValues newValues = new ContentValues();
 
-				// TODO
-				// get values from fields
-				// Assign values for each row.
-				newValues.put(AstrologDBOpenHelper.SESSION_TITLE, 
-						((EditText) findViewById(R.id.tf_title)).getText());
-				newValues.put(AstrologDBOpenHelper.SESSION_DATE, 
-						((DatePicker) findViewById(R.id.dp_date)).get);
-				newValues.put(AstrologDBOpenHelper.SESSION_LOCATION,
-						((EditText) findViewById(R.id.tf_location)).getText());
-				newValues.put(AstrologDBOpenHelper.SESSION_NOTES,
-						((EditText) findViewById(R.id.tf_notes)).getText());
+				title = ((EditText) findViewById(R.id.tf_title)).getText()
+						.toString();
+				location = ((EditText) findViewById(R.id.tf_location))
+						.getText().toString();
+				notes = ((EditText) findViewById(R.id.tf_notes)).getText()
+						.toString();
+
+				DatePicker dp_date = (DatePicker) findViewById(R.id.dp_date);
+				Calendar calendar = Calendar.getInstance();
+				calendar.set(Calendar.YEAR, dp_date.getYear());
+				calendar.set(Calendar.MONTH, dp_date.getMonth());
+				calendar.set(Calendar.DAY_OF_MONTH, dp_date.getDayOfMonth());
+
+				Date date = calendar.getTime();
+
+				//preparing row to be inserted
+				newValues.put(AstrologDBOpenHelper.SESSION_TITLE, title);
+				newValues.put(AstrologDBOpenHelper.SESSION_DATE,date.toString());
+				newValues.put(AstrologDBOpenHelper.SESSION_LOCATION, location);
+				newValues.put(AstrologDBOpenHelper.SESSION_NOTES, notes);
 
 				// Insert the row into your table
 				long insertedIndex = db.insert(
@@ -146,7 +165,7 @@ public class EditSession extends Activity {
 			default:
 				Log.w("editSession", "Updating record " + session_id
 						+ " on SESSIONS table");
-				//TODO update record
+				// TODO update record
 				Log.w("editSession", "Record " + session_id
 						+ " updated on SESSIONS table");
 				break;
@@ -156,8 +175,8 @@ public class EditSession extends Activity {
 			astrologDBOpenHelper.close();
 		}
 	}
-	
-	private void endActivityOK(){
+
+	private void endActivityOK() {
 		Intent resultIntent = new Intent();
 		setResult(Activity.RESULT_OK, resultIntent);
 		finish();
