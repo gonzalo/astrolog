@@ -18,15 +18,10 @@
             android:text="@string/date"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <EditText
-            android:id="@+id/tf_date"
+        <DatePicker
+            android:id="@+id/dp_date"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="date" >
-
-            <requestFocus />
-        </EditText>
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/lb_title"

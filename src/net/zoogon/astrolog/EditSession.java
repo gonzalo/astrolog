@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ListView;
 
 public class EditSession extends Activity {
 
@@ -18,19 +19,27 @@ public class EditSession extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_session);
         
+        //add textWatchers
+        
         //check if main activity wants to create a new session
         //or edit an existing one
         session_id = getIntent().getExtras().getInt("session_id");
         if (session_id != CREATE_SESSION)
         	loadSession(session_id);
         else
-        	Log.w("EditSession", "Create new session row");
+        	loadDefaultValues();
         
     }
 
-    private void loadSession(int session_id) {
+    private void loadDefaultValues() {
+		// TODO Auto-generated method stub
+    	Log.w("EditSession", "New session, setting default values");
+		
+	}
+
+	private void loadSession(int session_id) {
     	
-    	Log.w("EditSession", "Retrieving session row");
+    	Log.w("EditSession", "Editing session, retrieving session row");
 		// TODO Auto-generated method stub
     	// retrieve session_row from DB
     	
@@ -44,6 +53,16 @@ public class EditSession extends Activity {
         return true;
     }
 
+	public boolean validateInput(){
+		
+		boolean flag=true;
+		
+		//TODO validation methods
+		//Title not empty
+		
+		
+		return flag;
+	}
     public void saveSession(View view){
     	
     	//TODO
