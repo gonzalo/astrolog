@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="MainActivity"
+            android:name=".ListSessionsActivity"
             android:description="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EditSession"
+            android:name=".EditSessionActivity"
             android:label="@string/title_activity_edit_session" >
         </activity>
 

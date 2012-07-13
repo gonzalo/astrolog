@@ -1,5 +1,6 @@
 package net.zoogon.astrolog;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -8,13 +9,14 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.method.DateTimeKeyListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
-public class EditSession extends Activity {
+public class EditSessionActivity extends Activity {
 
 	public static final int ADD_SESSION_REQUEST = 1;
 	public static final int CREATE_SESSION = -1;
@@ -143,10 +145,12 @@ public class EditSession extends Activity {
 				calendar.set(Calendar.DAY_OF_MONTH, dp_date.getDayOfMonth());
 
 				Date date = calendar.getTime();
+				
+				String st_date = AstrologDBOpenHelper.formatDate(date);
 
 				//preparing row to be inserted
 				newValues.put(AstrologDBOpenHelper.SESSION_TITLE, title);
-				newValues.put(AstrologDBOpenHelper.SESSION_DATE,date.toString());
+				newValues.put(AstrologDBOpenHelper.SESSION_DATE, st_date);
 				newValues.put(AstrologDBOpenHelper.SESSION_LOCATION, location);
 				newValues.put(AstrologDBOpenHelper.SESSION_NOTES, notes);
 

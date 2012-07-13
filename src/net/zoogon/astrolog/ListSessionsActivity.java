@@ -16,7 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class ListSessionsActivity extends Activity {
 
 	AstrologDBOpenHelper astrologDBOpenHelper;
 	SQLiteDatabase db;
@@ -29,18 +29,24 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		updateSessionList();
+		
+	}
+
+	private void updateSessionList() {
+		
+		
+		List<String> values = new ArrayList<String>();
+		
 		// DBHelper creation and DB connection
 		astrologDBOpenHelper = new AstrologDBOpenHelper(this, AstrologDBOpenHelper.DATABASE_NAME, null, AstrologDBOpenHelper.DATABASE_VERSION);
 		db = astrologDBOpenHelper.getWritableDatabase();
-
-		
-		List<String> values = new ArrayList<String>();
-
 		Cursor sCursor = getSessions(db);
 
 		int columnIndex = sCursor
 				.getColumnIndexOrThrow(AstrologDBOpenHelper.SESSION_TITLE);
 
+		sCursor.moveToPosition(-1);
 		while (sCursor.moveToNext()) {
 			if (columnIndex > -1) {
 				values.add(sCursor.getString(columnIndex));
@@ -50,12 +56,11 @@ public class MainActivity extends Activity {
 				
 			}
 		}
+		
+		//TODO show message if there is no sessions (invite to create some)
 
 		// filling the viewList
 		ListView listView = (ListView) findViewById(R.id.vl_sessions);
-		// String[] values = new String[] { "Android", "Ubuntu", "iPhone",
-		// "WindowsMobile", "Blackberry", "WebOS", "Windows7", "Max OS X",
-		// "Linux", "OS/2" };
 
 		// First parameter - Context
 		// Second parameter - Layout for the row
@@ -72,8 +77,7 @@ public class MainActivity extends Activity {
 		// close DB
 		db.close();
 		// close helper
-		astrologDBOpenHelper.close();
-		
+		astrologDBOpenHelper.close();		
 	}
 
 	@Override
@@ -88,9 +92,9 @@ public class MainActivity extends Activity {
 	 * @param view
 	 */
 	public void addSession(View view) {
-		Intent intent = new Intent(this, EditSession.class);
-		intent.putExtra("session_id", EditSession.CREATE_SESSION);
-		startActivityForResult(intent, EditSession.ADD_SESSION_REQUEST);
+		Intent intent = new Intent(this, EditSessionActivity.class);
+		intent.putExtra("session_id", EditSessionActivity.CREATE_SESSION);
+		startActivityForResult(intent, EditSessionActivity.ADD_SESSION_REQUEST);
 	}
 
 	/**
@@ -102,11 +106,11 @@ public class MainActivity extends Activity {
 		String message = "";
 
 		switch (requestCode) {
-		case EditSession.ADD_SESSION_REQUEST:
+		case EditSessionActivity.ADD_SESSION_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
 				popUp(R.string.message_done);
-				// TODO update sessions list
+				updateSessionList();
 				break;
 
 			case Activity.RESULT_CANCELED:
@@ -154,7 +158,7 @@ public class MainActivity extends Activity {
 		String whereArgs[] = null;
 		String groupBy = null;
 		String having = null;
-		String order = null;
+		String order = AstrologDBOpenHelper.SESSION_DATE + " DESC";
 
 		// execute query
 		Cursor cursor = db.query(AstrologDBOpenHelper.DATABASE_SESSIONS_TABLE,

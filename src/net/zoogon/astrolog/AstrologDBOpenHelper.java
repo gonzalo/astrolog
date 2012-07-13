@@ -1,5 +1,8 @@
 package net.zoogon.astrolog;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -13,6 +16,7 @@ public class AstrologDBOpenHelper extends SQLiteOpenHelper {
 	// DB schema metadata
 	public static final String DATABASE_NAME = "AstrologDB.db";
 	public static final int DATABASE_VERSION = 1;
+	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"; //iso8601
 
 	// DB table names
 	public static final String DATABASE_SESSIONS_TABLE = "sessions";
@@ -95,5 +99,13 @@ public class AstrologDBOpenHelper extends SQLiteOpenHelper {
 		Cursor cursor = db.query(DATABASE_SESSIONS_TABLE, result_columns,
 				where, whereArgs, groupBy, having, order);
 		return cursor;
+	}
+	
+	public static final String formatDate(Date date){
+		
+		SimpleDateFormat iso8601Format = new SimpleDateFormat(DATE_FORMAT);
+		String st_date = iso8601Format.format(date);
+
+		return st_date; 
 	}
 }
