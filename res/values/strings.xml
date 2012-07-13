@@ -23,5 +23,9 @@
     <string name="save">Save</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_list_sessions">ListSessions</string>
+    
+    <!-- String space for edit Activity -->
+    <string name="error_title_length_0">You must enter a title</string>
+    <string name="error_location_length_0">You must enter a location</string>
 
 </resources>

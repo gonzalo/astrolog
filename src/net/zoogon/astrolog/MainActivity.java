@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-	public static final int ADD_SESSION_REQUEST = 1;
 	AstrologDBOpenHelper astrologDBOpenHelper;
 	SQLiteDatabase db;
 
@@ -91,7 +90,7 @@ public class MainActivity extends Activity {
 	public void addSession(View view) {
 		Intent intent = new Intent(this, EditSession.class);
 		intent.putExtra("session_id", EditSession.CREATE_SESSION);
-		startActivityForResult(intent, ADD_SESSION_REQUEST);
+		startActivityForResult(intent, EditSession.ADD_SESSION_REQUEST);
 	}
 
 	/**
@@ -103,7 +102,7 @@ public class MainActivity extends Activity {
 		String message = "";
 
 		switch (requestCode) {
-		case ADD_SESSION_REQUEST:
+		case EditSession.ADD_SESSION_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
 				popUp(R.string.message_done);
