@@ -18,8 +18,9 @@ import android.widget.EditText;
 
 public class EditSessionActivity extends Activity {
 
-	public static final int ADD_SESSION_REQUEST = 1;
 	public static final int CREATE_SESSION = -1;
+	public static final int ADD_SESSION_REQUEST = 1;
+	public static final int EDIT_SESSION_REQUEST = 0;
 
 	private int session_id;
 
@@ -38,11 +39,9 @@ public class EditSessionActivity extends Activity {
 
 		if (session_id != CREATE_SESSION)
 			loadSession(session_id);
-		// else
-		// loadDefaultValues();
-
 	}
 
+	@Deprecated
 	private void loadDefaultValues() {
 		Log.w("EditSession", "New session, setting default values");
 

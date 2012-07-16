@@ -12,6 +12,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -20,6 +22,7 @@ public class ListSessionsActivity extends Activity {
 
 	AstrologDBOpenHelper astrologDBOpenHelper;
 	SQLiteDatabase db;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,18 @@ public class ListSessionsActivity extends Activity {
 
 		// Assign adapter to ListView
 		listView.setAdapter(adapter);
+		
+		// add a event to each row
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+				int position, long id) {
+				Toast.makeText(getApplicationContext(),
+					"Click ListItem Number " + position, Toast.LENGTH_LONG)
+					.show();
+			}
+		}); 
+		
 
 		// close cursor
 		sCursor.close();
@@ -96,7 +111,18 @@ public class ListSessionsActivity extends Activity {
 		intent.putExtra("session_id", EditSessionActivity.CREATE_SESSION);
 		startActivityForResult(intent, EditSessionActivity.ADD_SESSION_REQUEST);
 	}
-
+	
+	/**
+	 * Launch editSession activity to edit some session
+	 * 
+	 * @param view
+	 */
+	public void editSession(int session_id) {
+		Intent intent = new Intent(this, EditSessionActivity.class);
+		intent.putExtra("session_id", session_id);
+		startActivityForResult(intent, EditSessionActivity.EDIT_SESSION_REQUEST);
+	}
+	
 	/**
 	 * Launched after activity called with startActivityForResult finishes
 	 */
