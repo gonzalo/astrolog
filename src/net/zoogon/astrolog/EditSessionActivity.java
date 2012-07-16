@@ -27,6 +27,8 @@ public class EditSessionActivity extends Activity {
 	private String title;
 	private String location;
 	private String notes;
+	
+	private Session session;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,36 +43,33 @@ public class EditSessionActivity extends Activity {
 			loadSession(session_id);
 	}
 
-	@Deprecated
-	private void loadDefaultValues() {
-		Log.w("EditSession", "New session, setting default values");
-
-		EditText tf_to_fill;
-		tf_to_fill = (EditText) findViewById(R.id.tf_title);
-		tf_to_fill.setText(getText(R.string.title));
-
-		tf_to_fill = (EditText) findViewById(R.id.tf_location);
-		tf_to_fill.setText(getText(R.string.location));
-
-		tf_to_fill = (EditText) findViewById(R.id.tf_notes);
-		tf_to_fill.setText(getText(R.string.notes));
-
-		Log.w("EditSession", "Default values have been setted");
-
-	}
-
 	/**
 	 * takes session_id and looks on DB for that row filling the layout fields
 	 * 
 	 * @param session_id
 	 */
-	private void loadSession(int session_id) {
+	private void loadSession(long session_id) {
 
 		Log.w("EditSession", "Editing session, retrieving session row");
-		// TODO Auto-generated method stub
-		// retrieve session_row from DB
 
-		// fill the text views
+		// retrieve session_row from DB
+		SessionsDAO dataSource = new SessionsDAO(this);
+		dataSource.open();
+		session = dataSource.getSession(session_id);
+
+		if (session!=null){
+			// fill the text views
+			((EditText) findViewById(R.id.tf_title)).setText(session.getTitle());
+			((EditText) findViewById(R.id.tf_location)).setText(session.getLocation());
+			((EditText) findViewById(R.id.tf_notes)).setText(session.getNotes());
+			DatePicker dp_date = (DatePicker) findViewById(R.id.dp_date);			
+		
+			//TODO
+			//fill the datepicker
+		}
+		
+		
+		
 
 	}
 
@@ -117,15 +116,15 @@ public class EditSessionActivity extends Activity {
 	public void saveSession(View view) {
 
 		if (validateInput()) {
-
-			AstrologDBOpenHelper astrologDBOpenHelper = new AstrologDBOpenHelper(
-					this, AstrologDBOpenHelper.DATABASE_NAME, null,
-					AstrologDBOpenHelper.DATABASE_VERSION);
-			SQLiteDatabase db = astrologDBOpenHelper.getWritableDatabase();
-
+	
 			switch (session_id) {
 			case CREATE_SESSION:
+				
+				
 				Log.w("editSession", "Inserting new record on SESSIONS table");
+
+				SessionsDAO dataSource = new SessionsDAO(this);
+				dataSource.open();
 				
 				//get input values
 				ContentValues newValues = new ContentValues();
@@ -145,22 +144,12 @@ public class EditSessionActivity extends Activity {
 
 				Date date = calendar.getTime();
 				
-				String st_date = AstrologDBOpenHelper.formatDate(date);
-
-				//preparing row to be inserted
-				newValues.put(AstrologDBOpenHelper.SESSION_TITLE, title);
-				newValues.put(AstrologDBOpenHelper.SESSION_DATE, st_date);
-				newValues.put(AstrologDBOpenHelper.SESSION_LOCATION, location);
-				newValues.put(AstrologDBOpenHelper.SESSION_NOTES, notes);
-
-				// Insert the row into your table
-				long insertedIndex = db.insert(
-						AstrologDBOpenHelper.DATABASE_SESSIONS_TABLE, null,
-						newValues);
-
+				Session session = dataSource.createSession(title, date, location, notes);
+				
 				Log.w("EditSession", "Inserted session. New index = "
-						+ insertedIndex);
+						+ session.getId());
 
+				dataSource.close();
 				endActivityOK();
 
 				break;
@@ -174,8 +163,7 @@ public class EditSessionActivity extends Activity {
 				break;
 			}
 
-			db.close();
-			astrologDBOpenHelper.close();
+
 		}
 	}
 

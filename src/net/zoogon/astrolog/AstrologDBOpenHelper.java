@@ -1,5 +1,6 @@
 package net.zoogon.astrolog;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -101,11 +102,24 @@ public class AstrologDBOpenHelper extends SQLiteOpenHelper {
 		return cursor;
 	}
 	
-	public static final String formatDate(Date date){
+	public static final String formatDateToString(Date date){
 		
 		SimpleDateFormat iso8601Format = new SimpleDateFormat(DATE_FORMAT);
 		String st_date = iso8601Format.format(date);
 
 		return st_date; 
+	}
+	
+	public static final Date formatStringToDate(String st_date){
+		
+		SimpleDateFormat iso8601Format = new SimpleDateFormat(DATE_FORMAT);
+		Date date = new Date();
+		try {
+			date = iso8601Format.parse(st_date);
+		} catch (Exception e) {
+			Log.w("Error","Error parsing date from database");
+		}
+
+		return date; 
 	}
 }

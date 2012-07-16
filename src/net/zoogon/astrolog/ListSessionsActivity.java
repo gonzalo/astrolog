@@ -1,14 +1,9 @@
 package net.zoogon.astrolog;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -20,9 +15,10 @@ import android.widget.Toast;
 
 public class ListSessionsActivity extends Activity {
 
-	AstrologDBOpenHelper astrologDBOpenHelper;
-	SQLiteDatabase db;
-	
+	//AstrologDBOpenHelper astrologDBOpenHelper;
+	//SQLiteDatabase db;
+	private SessionsDAO dataSource;
+	private List<Session> values;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -31,48 +27,28 @@ public class ListSessionsActivity extends Activity {
 				
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		// updateSessionList();
+		dataSource = new SessionsDAO(this);
+		dataSource.open();
 
 		updateSessionList();
 		
 	}
 
 	private void updateSessionList() {
-		
-		
-		List<String> values = new ArrayList<String>();
-		
-		// DBHelper creation and DB connection
-		astrologDBOpenHelper = new AstrologDBOpenHelper(this, AstrologDBOpenHelper.DATABASE_NAME, null, AstrologDBOpenHelper.DATABASE_VERSION);
-		db = astrologDBOpenHelper.getWritableDatabase();
-		Cursor sCursor = getSessions(db);
 
-		int columnIndex = sCursor
-				.getColumnIndexOrThrow(AstrologDBOpenHelper.SESSION_TITLE);
-
-		sCursor.moveToPosition(-1);
-		while (sCursor.moveToNext()) {
-			if (columnIndex > -1) {
-				values.add(sCursor.getString(columnIndex));
-			} else {
-
-				popUp("Column not found!");
-				
-			}
-		}
-		
-		//TODO show message if there is no sessions (invite to create some)
 
 		// filling the viewList
 		ListView listView = (ListView) findViewById(R.id.vl_sessions);
 
-		// First parameter - Context
-		// Second parameter - Layout for the row
-		// Third parameter - ID of the View to which the data is written
-		// Forth - the Array of data
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, android.R.id.text1, values);
+		values = dataSource.getAllSessions();
 
-		// Assign adapter to ListView
+		//TODO show message if there is no sessions (invite to create some)
+		
+		ArrayAdapter<Session> adapter = new ArrayAdapter<Session>(this,
+				android.R.layout.simple_list_item_1, values);
+		
 		listView.setAdapter(adapter);
 		
 		// add a event to each row
@@ -80,19 +56,10 @@ public class ListSessionsActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 				int position, long id) {
-				Toast.makeText(getApplicationContext(),
-					"Click ListItem Number " + position, Toast.LENGTH_LONG)
-					.show();
+				editSession(values.get(position).getId());
 			}
 		}); 
 		
-
-		// close cursor
-		sCursor.close();
-		// close DB
-		db.close();
-		// close helper
-		astrologDBOpenHelper.close();		
 	}
 
 	@Override
@@ -101,12 +68,25 @@ public class ListSessionsActivity extends Activity {
 		return true;
 	}
 
+	@Override
+	protected void onResume() {
+		dataSource.open();
+		super.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		dataSource.close();
+		super.onPause();
+	}	
+	
 	/**
 	 * Launch editSession activity in creation mode
 	 * 
 	 * @param view
 	 */
 	public void addSession(View view) {
+		dataSource.close();
 		Intent intent = new Intent(this, EditSessionActivity.class);
 		intent.putExtra("session_id", EditSessionActivity.CREATE_SESSION);
 		startActivityForResult(intent, EditSessionActivity.ADD_SESSION_REQUEST);
@@ -117,7 +97,7 @@ public class ListSessionsActivity extends Activity {
 	 * 
 	 * @param view
 	 */
-	public void editSession(int session_id) {
+	public void editSession(long session_id) {
 		Intent intent = new Intent(this, EditSessionActivity.class);
 		intent.putExtra("session_id", session_id);
 		startActivityForResult(intent, EditSessionActivity.EDIT_SESSION_REQUEST);
@@ -130,6 +110,8 @@ public class ListSessionsActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		String message = "";
+		
+		dataSource.open();
 
 		switch (requestCode) {
 		case EditSessionActivity.ADD_SESSION_REQUEST:
@@ -159,7 +141,7 @@ public class ListSessionsActivity extends Activity {
 	}
 
 	/**
-	 * Just a code snippet for toast To use in conjuntion with resources class
+	 * Just a code snippet for toast To use in with resources class
 	 * (ex:R.string.message_done) or a String object
 	 * 
 	 * @param message
@@ -172,32 +154,4 @@ public class ListSessionsActivity extends Activity {
 		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 	}
 
-	private Cursor getSessions(SQLiteDatabase db) {
-
-		// configuring query
-		// Specify the result column projection. Return the minimum set
-		// of columns required to satisfy your requirements.
-		String[] result_columns = new String[] {
-				AstrologDBOpenHelper.SESSION_ID,
-				AstrologDBOpenHelper.SESSION_TITLE };
-		String where = null;
-		String whereArgs[] = null;
-		String groupBy = null;
-		String having = null;
-		String order = AstrologDBOpenHelper.SESSION_DATE + " DESC";
-
-		// execute query
-		Cursor cursor = db.query(AstrologDBOpenHelper.DATABASE_SESSIONS_TABLE,
-				result_columns, where, whereArgs, groupBy, having, order);
-		int SESSION_ID_COLUMN_INDEX = cursor.getColumnIndexOrThrow(AstrologDBOpenHelper.SESSION_ID);
-
-		
-		while (cursor.moveToNext()) {
-			Log.w("database", "session row id" + cursor.getInt(SESSION_ID_COLUMN_INDEX));					
-		}
-		cursor.moveToFirst();
-
-		// return result
-		return cursor;
-	}
 }
