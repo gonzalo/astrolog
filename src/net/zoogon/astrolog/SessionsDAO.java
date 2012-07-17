@@ -59,6 +59,25 @@ public class SessionsDAO {
 		cursor.close();
 		return newSession;
 	}
+	
+
+	public int updateSession(long session_id, String title, Date date,
+			String location, String notes) {
+		ContentValues newValues = new ContentValues();
+
+		String st_date = AstrologDBOpenHelper.formatDateToString(date);
+
+		// preparing row to be inserted
+		newValues.put(AstrologDBOpenHelper.SESSION_TITLE, title);
+		newValues.put(AstrologDBOpenHelper.SESSION_DATE, st_date);
+		newValues.put(AstrologDBOpenHelper.SESSION_LOCATION, location);
+		newValues.put(AstrologDBOpenHelper.SESSION_NOTES, notes);
+		
+		String where = AstrologDBOpenHelper.SESSION_ID + "=" + session_id;
+		
+		int n_rows = database.update(AstrologDBOpenHelper.DATABASE_SESSIONS_TABLE, newValues, where, null);
+		return n_rows;
+	}
 
 	public void deleteSession(Session session) {
 		long id = session.getId();
@@ -140,5 +159,6 @@ public class SessionsDAO {
 		session.setNotes(cursor.getString(indexNotes));
 		return session;
 	}
+
 
 }

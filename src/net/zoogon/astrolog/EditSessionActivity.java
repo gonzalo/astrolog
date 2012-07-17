@@ -1,32 +1,28 @@
 package net.zoogon.astrolog;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.text.method.DateTimeKeyListener;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
 
-public class EditSessionActivity extends Activity {
+public class EditSessionActivity extends FragmentActivity {
 
 	public static final int CREATE_SESSION = -1;
 	public static final int ADD_SESSION_REQUEST = 1;
 	public static final int EDIT_SESSION_REQUEST = 0;
 
-	private int session_id;
+	private long session_id;
 
 	private String title;
 	private String location;
 	private String notes;
+	private Date date;
 	
 	private Session session;
 
@@ -37,7 +33,7 @@ public class EditSessionActivity extends Activity {
 
 		// check if main activity wants to create a new session
 		// or edit an existing one
-		session_id = getIntent().getExtras().getInt("session_id");
+		session_id = getIntent().getExtras().getLong("session_id", CREATE_SESSION);
 
 		if (session_id != CREATE_SESSION)
 			loadSession(session_id);
@@ -62,10 +58,15 @@ public class EditSessionActivity extends Activity {
 			((EditText) findViewById(R.id.tf_title)).setText(session.getTitle());
 			((EditText) findViewById(R.id.tf_location)).setText(session.getLocation());
 			((EditText) findViewById(R.id.tf_notes)).setText(session.getNotes());
-			DatePicker dp_date = (DatePicker) findViewById(R.id.dp_date);			
-		
-			//TODO
-			//fill the datepicker
+			((EditText) findViewById(R.id.tf_date)).setText(session.getDate().toString());
+			//DatePicker dp_date = (DatePicker) findViewById(R.id.dp_date);
+			
+			//Calendar calendar = Calendar.getInstance();
+			
+			//calendar.setTime(session.getDate());
+			
+			//dp_date.init(calendar.YEAR, calendar.MONTH, calendar.DAY_OF_MONTH, null);
+
 		}
 		
 		
@@ -79,6 +80,12 @@ public class EditSessionActivity extends Activity {
 		return true;
 	}
 
+	
+	public void showDatePickerDialog(View v) {
+	    DialogFragment newFragment = new DatePickerFragment();
+	    newFragment.show(getSupportFragmentManager(), "datePicker");
+	}
+	
 	/**
 	 * Checks if input files are valid to be inserted in DB
 	 * 
@@ -116,52 +123,50 @@ public class EditSessionActivity extends Activity {
 	public void saveSession(View view) {
 
 		if (validateInput()) {
-	
-			switch (session_id) {
-			case CREATE_SESSION:
-				
+			
+			//get the field values
+			title = ((EditText) findViewById(R.id.tf_title)).getText()
+					.toString();
+			location = ((EditText) findViewById(R.id.tf_location))
+					.getText().toString();
+			notes = ((EditText) findViewById(R.id.tf_notes)).getText()
+					.toString();
+			
+			//date is updated every time we call datepicker
+
+			//DatePicker dp_date = (DatePicker) findViewById(R.id.dp_date);
+			
+			//Calendar calendar = Calendar.getInstance();
+			//calendar.set(Calendar.YEAR, dp_date.getYear());
+			//calendar.set(Calendar.MONTH, dp_date.getMonth());
+			//calendar.set(Calendar.DAY_OF_MONTH, dp_date.getDayOfMonth());
+
+			//Date date = calendar.getTime();
+
+			SessionsDAO dataSource = new SessionsDAO(this);
+			dataSource.open();
+			
+			if (session_id==CREATE_SESSION) {
 				
 				Log.w("editSession", "Inserting new record on SESSIONS table");
-
-				SessionsDAO dataSource = new SessionsDAO(this);
-				dataSource.open();
-				
-				//get input values
-				ContentValues newValues = new ContentValues();
-
-				title = ((EditText) findViewById(R.id.tf_title)).getText()
-						.toString();
-				location = ((EditText) findViewById(R.id.tf_location))
-						.getText().toString();
-				notes = ((EditText) findViewById(R.id.tf_notes)).getText()
-						.toString();
-
-				DatePicker dp_date = (DatePicker) findViewById(R.id.dp_date);
-				Calendar calendar = Calendar.getInstance();
-				calendar.set(Calendar.YEAR, dp_date.getYear());
-				calendar.set(Calendar.MONTH, dp_date.getMonth());
-				calendar.set(Calendar.DAY_OF_MONTH, dp_date.getDayOfMonth());
-
-				Date date = calendar.getTime();
-				
+							
 				Session session = dataSource.createSession(title, date, location, notes);
 				
 				Log.w("EditSession", "Inserted session. New index = "
 						+ session.getId());
 
-				dataSource.close();
-				endActivityOK();
-
-				break;
-
-			default:
+			} else {
+				
 				Log.w("editSession", "Updating record " + session_id
 						+ " on SESSIONS table");
-				// TODO update record
+				
+				dataSource.updateSession(session_id, title, date, location, notes);
+				
 				Log.w("editSession", "Record " + session_id
 						+ " updated on SESSIONS table");
-				break;
 			}
+			dataSource.close();
+			endActivityOK();
 
 
 		}

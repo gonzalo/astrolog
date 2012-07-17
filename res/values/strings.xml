@@ -27,5 +27,6 @@
     <!-- String space for edit Activity -->
     <string name="error_title_length_0">You must enter a title</string>
     <string name="error_location_length_0">You must enter a location</string>
+    <string name="pick_date">Pick date</string>
 
 </resources>

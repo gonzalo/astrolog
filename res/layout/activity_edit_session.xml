@@ -18,10 +18,21 @@
             android:text="@string/date"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <DatePicker
-            android:id="@+id/dp_date"
+        <EditText
+            android:id="@+id/tf_date"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:enabled="false"
+            android:hint="@string/title"
+            android:inputType="text"
+            android:onClick="showDatePickerDialog" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="showDatePickerDialog"
+            android:text="@string/pick_date" />
 
         <TextView
             android:id="@+id/lb_title"
@@ -72,9 +83,8 @@
             android:id="@+id/bt_save"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/save"
-            android:onClick="saveSession" />
-
+            android:onClick="saveSession"
+            android:text="@string/save" />
     </LinearLayout>
 
 </RelativeLayout>

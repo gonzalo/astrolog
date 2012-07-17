@@ -36,32 +36,6 @@ public class ListSessionsActivity extends Activity {
 		
 	}
 
-	private void updateSessionList() {
-
-
-		// filling the viewList
-		ListView listView = (ListView) findViewById(R.id.vl_sessions);
-
-		values = dataSource.getAllSessions();
-
-		//TODO show message if there is no sessions (invite to create some)
-		
-		ArrayAdapter<Session> adapter = new ArrayAdapter<Session>(this,
-				android.R.layout.simple_list_item_1, values);
-		
-		listView.setAdapter(adapter);
-		
-		// add a event to each row
-		listView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-				int position, long id) {
-				editSession(values.get(position).getId());
-			}
-		}); 
-		
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
@@ -80,6 +54,32 @@ public class ListSessionsActivity extends Activity {
 		super.onPause();
 	}	
 	
+	private void updateSessionList() {
+	
+	
+		// filling the viewList
+		ListView listView = (ListView) findViewById(R.id.vl_sessions);
+	
+		values = dataSource.getAllSessions();
+	
+		//TODO show message if there is no sessions (invite to create some)
+		
+		ArrayAdapter<Session> adapter = new ArrayAdapter<Session>(this,
+				android.R.layout.simple_list_item_1, values);
+		
+		listView.setAdapter(adapter);
+		
+		// add a event to each row
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+				int position, long id) {
+				editSession(values.get(position).getId());
+			}
+		}); 
+		
+	}
+
 	/**
 	 * Launch editSession activity in creation mode
 	 * 
@@ -115,6 +115,7 @@ public class ListSessionsActivity extends Activity {
 
 		switch (requestCode) {
 		case EditSessionActivity.ADD_SESSION_REQUEST:
+		case EditSessionActivity.EDIT_SESSION_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
 				popUp(R.string.message_done);
