@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.widget.DatePicker;
 
 public class DatePickerFragment extends DialogFragment implements
@@ -24,6 +25,6 @@ public class DatePickerFragment extends DialogFragment implements
 	}
 
 	public void onDateSet(DatePicker view, int year, int month, int day) {
-		// Do something with the date chosen by the user
+		Log.w("DatePicker","Date = " + year);
 	}
 }
