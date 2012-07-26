@@ -1,10 +1,10 @@
 package net.zoogon.astrolog;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
-public class EditSessionActivity extends FragmentActivity {
+public class EditSessionActivity extends FragmentActivity implements OnDateSetListener {
 
 	public static final int CREATE_SESSION = -1;
 	public static final int ADD_SESSION_REQUEST = 1;
@@ -48,6 +48,16 @@ public class EditSessionActivity extends FragmentActivity {
 
 		if (session_id != CREATE_SESSION)
 			loadSession(session_id);
+		else
+			setDefaultValues();
+	}
+
+	private void setDefaultValues() {
+		// TODO Auto-generated method stub
+		date = new Date();
+		String date_st = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(date); 
+		((EditText) findViewById(R.id.tf_date)).setText(date_st);
+		
 	}
 
 	/**
@@ -72,8 +82,13 @@ public class EditSessionActivity extends FragmentActivity {
 					.getLocation());
 			((EditText) findViewById(R.id.tf_notes))
 					.setText(session.getNotes());
-			((EditText) findViewById(R.id.tf_date)).setText(session.getDate()
-					.toString());
+			
+			date = session.getDate();
+			String date_st = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(date);
+			
+			
+			((EditText) findViewById(R.id.tf_date)).setText(date_st);
+			
 
 		}
 
@@ -87,8 +102,27 @@ public class EditSessionActivity extends FragmentActivity {
 
 	public void showDatePickerDialog(View v) {
 		DialogFragment newFragment = new DatePickerFragment();
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		Bundle args = new Bundle();
+        args.putInt("year", cal.get(Calendar.YEAR));
+        args.putInt("month", cal.get(Calendar.MONTH));
+        args.putInt("day", cal.get(Calendar.DAY_OF_MONTH));
+        newFragment.setArguments(args);
 		newFragment.show(getSupportFragmentManager(), "datePicker");
 	}
+
+	
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        //update date and tf_date
+    	Calendar cal = Calendar.getInstance();
+    	cal.set(year, month, day);
+    	date = cal.getTime();
+		String date_st = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(date); 
+        ((EditText) findViewById(R.id.tf_date)).setText(date_st);
+    }
 
 	/**
 	 * Checks if input files are valid to be inserted in DB
@@ -123,9 +157,10 @@ public class EditSessionActivity extends FragmentActivity {
 		}
 
 		// Date is valid date
-		Calendar cal = Calendar.getInstance();
+		tf_to_validate = (EditText) findViewById(R.id.tf_date);
+		
 		try {
-		    cal.setTime(date);
+			date = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).parse(tf_to_validate.getText().toString());
 		}
 		catch (Exception e) {
 		  flag = false;
@@ -146,7 +181,7 @@ public class EditSessionActivity extends FragmentActivity {
 			notes = ((EditText) findViewById(R.id.tf_notes)).getText()
 					.toString();
 
-			// date is updated every time we call datepicker
+			//date is set on validation method
 
 			SessionsDAO dataSource = new SessionsDAO(this);
 			dataSource.open();
