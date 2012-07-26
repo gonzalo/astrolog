@@ -15,15 +15,13 @@ import android.widget.Toast;
 
 public class ListSessionsActivity extends Activity {
 
-	//AstrologDBOpenHelper astrologDBOpenHelper;
-	//SQLiteDatabase db;
 	private SessionsDAO dataSource;
 	private List<Session> values;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
-		Log.w(ACTIVITY_SERVICE, "MainActivity starting");
+		Log.w(ACTIVITY_SERVICE, "ListSessionsActivity starting");
 				
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
@@ -74,9 +72,13 @@ public class ListSessionsActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 				int position, long id) {
-				editSession(values.get(position).getId());
+				//editSession(values.get(position).getId());
+				listObservations(values.get(position).getId());
 			}
 		}); 
+		// TODO add long click listener to delete sessions
+		
+		// TODO fill stats counter
 		
 	}
 
@@ -104,6 +106,16 @@ public class ListSessionsActivity extends Activity {
 	}
 	
 	/**
+	 * Launch ListObservations activity 
+	 * @param session_id
+	 */
+	public void listObservations(long session_id){
+		Intent intent = new Intent(this, ListObservationsActivity.class);
+		intent.putExtra("session_id", session_id);
+		startActivity(intent);
+	}
+	
+	/**
 	 * Launched after activity called with startActivityForResult finishes
 	 */
 	@Override
@@ -119,6 +131,8 @@ public class ListSessionsActivity extends Activity {
 			switch (resultCode) {
 			case Activity.RESULT_OK:
 				popUp(R.string.message_done);
+				//TODO instead of popup I should open session to add
+				//new observations
 				updateSessionList();
 				break;
 

@@ -65,7 +65,6 @@ public class AstrologDBOpenHelper extends SQLiteOpenHelper {
 		// The simplest case is to drop the old table and create a new one.
 		db.execSQL("DROP TABLE IF IT EXISTS " + DATABASE_SESSIONS_TABLE);
 
-		// TODO
 		// KEEP ATENTION OLD DATA WILL BE DROPPED BY THIS METHOD.
 		// NEWER VERSIONS SHOULD MIGRATE OLD DATA TO NEW DB SCHEMA
 	}

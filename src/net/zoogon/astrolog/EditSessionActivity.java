@@ -1,5 +1,6 @@
 package net.zoogon.astrolog;
 
+import java.util.Calendar;
 import java.util.Date;
 import android.os.Bundle;
 import android.app.Activity;
@@ -34,10 +35,16 @@ public class EditSessionActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_session);
 
+		
+		//TODO check this method of differnece between CREATE_SESSION
+		//or UPDATE_SESSION, maybe correct but probably a wrong way
+		//get it done
+		
 		// check if main activity wants to create a new session
 		// or edit an existing one
 		session_id = getIntent().getExtras().getLong("session_id",
 				CREATE_SESSION);
+		
 
 		if (session_id != CREATE_SESSION)
 			loadSession(session_id);
@@ -67,14 +74,6 @@ public class EditSessionActivity extends FragmentActivity {
 					.setText(session.getNotes());
 			((EditText) findViewById(R.id.tf_date)).setText(session.getDate()
 					.toString());
-			// DatePicker dp_date = (DatePicker) findViewById(R.id.dp_date);
-
-			// Calendar calendar = Calendar.getInstance();
-
-			// calendar.setTime(session.getDate());
-
-			// dp_date.init(calendar.YEAR, calendar.MONTH,
-			// calendar.DAY_OF_MONTH, null);
 
 		}
 
@@ -113,6 +112,7 @@ public class EditSessionActivity extends FragmentActivity {
 		} else {
 			tf_to_validate.setError(null);
 		}
+
 		// Location not empty
 		tf_to_validate = (EditText) findViewById(R.id.tf_location);
 		if (tf_to_validate.getText().toString().length() == 0) {
@@ -120,6 +120,15 @@ public class EditSessionActivity extends FragmentActivity {
 			flag = false;
 		} else {
 			tf_to_validate.setError(null);
+		}
+
+		// Date is valid date
+		Calendar cal = Calendar.getInstance();
+		try {
+		    cal.setTime(date);
+		}
+		catch (Exception e) {
+		  flag = false;
 		}
 
 		return flag;
@@ -138,15 +147,6 @@ public class EditSessionActivity extends FragmentActivity {
 					.toString();
 
 			// date is updated every time we call datepicker
-
-			// DatePicker dp_date = (DatePicker) findViewById(R.id.dp_date);
-
-			// Calendar calendar = Calendar.getInstance();
-			// calendar.set(Calendar.YEAR, dp_date.getYear());
-			// calendar.set(Calendar.MONTH, dp_date.getMonth());
-			// calendar.set(Calendar.DAY_OF_MONTH, dp_date.getDayOfMonth());
-
-			// Date date = calendar.getTime();
 
 			SessionsDAO dataSource = new SessionsDAO(this);
 			dataSource.open();

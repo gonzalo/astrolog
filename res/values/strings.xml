@@ -3,7 +3,7 @@
     <string name="app_name">AstroLog</string>
     <string name="app_description">Astronomy logging tool to register your observing sessions.</string>
 
-    <!-- String space for main activity -->
+    <!-- Main -->
     <string name="title_activity_main">Astrolog - Sessions list</string>
     <string name="message_done">Done!</string>
     <string name="message_canceled">Canceled</string>
@@ -13,20 +13,22 @@
     <string name="menu_settings">Settings</string>
     <string name="add_session">Add session</string>
 
-    <!-- String space for main activity -->
-    <string name="summary_example">3 sessions 20 objects</string>
+    <!-- ListSessions -->
+    <string name="summary_example">3 ses. 20 obj.</string>
     <string name="title_activity_edit_session">Session details</string>
     <string name="title">Title</string>
     <string name="date">Date</string>
     <string name="location">Location</string>
     <string name="notes">Notes</string>
     <string name="save">Save</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_list_sessions">ListSessions</string>
-    
-    <!-- String space for edit Activity -->
+
+    <!-- EditSession -->
     <string name="error_title_length_0">You must enter a title</string>
     <string name="error_location_length_0">You must enter a location</string>
     <string name="pick_date">Pick date</string>
-
+    <string name="title_activity_list_observations">ListObservations</string>
+    
+    <!-- ListObservations -->
+	<string name="add_observation">Add observation</string>
 </resources>
