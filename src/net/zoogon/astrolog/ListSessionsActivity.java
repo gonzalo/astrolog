@@ -70,8 +70,8 @@ public class ListSessionsActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 				int position, long id) {
-				editSession(values.get(position).getId());
-				//listObservations(values.get(position).getId());
+				//editSession(values.get(position).getId());
+				listObservations(values.get(position).getId());
 			}
 		}); 
 		// TODO add long click listener to delete sessions

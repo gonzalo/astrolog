@@ -6,7 +6,7 @@ import java.util.Date;
 public class Observation {
 	
 	private long _id;
-	private Date datetime;
+	private Date date;
 	private String object_id;
 	private String telescope;
 	private String eyepiece;
@@ -24,31 +24,31 @@ public class Observation {
 	/**
 	 * @param _id the _id to set
 	 */
-	public void seId(long _id) {
+	public void setId(long _id) {
 		this._id = _id;
 	}
 	/**
-	 * @return the datetime
+	 * @return the date
 	 */
 	public Date getDatetime() {
-		return datetime;
+		return date;
 	}
 	/**
-	 * @param datetime the datetime to set
+	 * @param datetime the date to set
 	 */
-	public void setDatetime(Date datetime) {
-		this.datetime = datetime;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 	/**
 	 * @return the object_id
 	 */
-	public String getObject_id() {
+	public String getObjectId() {
 		return object_id;
 	}
 	/**
 	 * @param object_id the object_id to set
 	 */
-	public void setObject_id(String object_id) {
+	public void setObjectId(String object_id) {
 		this.object_id = object_id;
 	}
 	/**
@@ -127,7 +127,7 @@ public class Observation {
 	public String toString(){
 		
 		//something like "11/11/12 - M82"
-		String date_st = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(datetime); 
+		String date_st = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(date); 
 		return date_st + " - " + this.object_id;
 	}
 
