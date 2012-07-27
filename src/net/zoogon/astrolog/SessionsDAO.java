@@ -38,6 +38,7 @@ public class SessionsDAO {
 	public Session createSession(String title, Date date, String location,
 			String notes) {
 
+		
 		ContentValues newValues = new ContentValues();
 
 		String st_date = AstrologDBOpenHelper.formatDateToString(date);
@@ -81,7 +82,7 @@ public class SessionsDAO {
 
 	public void deleteSession(Session session) {
 		long id = session.getId();
-		Log.w("SessionDAO", "Comment deleted with id: " + id);
+		Log.w("SessionDAO", "Session deleted with id: " + id);
 		database.delete(AstrologDBOpenHelper.DATABASE_SESSIONS_TABLE,
 				AstrologDBOpenHelper.SESSION_ID + " = " + id, null);
 	}
