@@ -133,7 +133,9 @@ public class ListSessionsActivity extends Activity {
 				popUp(R.string.message_done);
 				//TODO instead of popup I should open session to add
 				//new observations
+				long session_id = data.getExtras().getLong("session_id");
 				updateSessionList();
+				listObservations(session_id);
 				break;
 
 			case Activity.RESULT_CANCELED:

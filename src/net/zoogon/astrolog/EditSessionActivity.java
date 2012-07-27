@@ -192,9 +192,10 @@ public class EditSessionActivity extends FragmentActivity implements OnDateSetLi
 
 				Session session = dataSource.createSession(title, date,
 						location, notes);
+				session_id= session.getId();
 
 				Log.w("EditSessionActivity",
-						"Inserted session. New index = " + session.getId());
+						"Inserted session. New index = " + session_id);
 
 			} else {
 
@@ -208,13 +209,14 @@ public class EditSessionActivity extends FragmentActivity implements OnDateSetLi
 						+ " updated on SESSIONS table");
 			}
 			dataSource.close();
-			endActivityOK();
+			endActivityOK(session_id);
 
 		}
 	}
 
-	private void endActivityOK() {
+	private void endActivityOK(long session_id) {
 		Intent resultIntent = new Intent();
+		resultIntent.putExtra("session_id", session_id);
 		setResult(Activity.RESULT_OK, resultIntent);
 		finish();
 	}
