@@ -17,10 +17,11 @@ import android.widget.EditText;
 
 public class EditSessionActivity extends FragmentActivity implements OnDateSetListener {
 
-	public static final int CREATE_SESSION = -1;
 	public static final int ADD_SESSION_REQUEST = 1;
 	public static final int EDIT_SESSION_REQUEST = 0;
 
+	private SessionsDAO dataSource;
+	private int request_code;
 	private long session_id;
 
 	private String title;
@@ -35,19 +36,18 @@ public class EditSessionActivity extends FragmentActivity implements OnDateSetLi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_session);
 
-		
-		//TODO check this method of differnece between CREATE_SESSION
-		//or UPDATE_SESSION, maybe correct but probably a wrong way
-		//get it done
-		
+		dataSource = new SessionsDAO(this);
+
+	
 		// check if main activity wants to create a new session
 		// or edit an existing one
-		session_id = getIntent().getExtras().getLong("session_id",
-				CREATE_SESSION);
+		request_code = getIntent().getExtras().getInt("request_code");
 		
 
-		if (session_id != CREATE_SESSION)
-			loadSession(session_id);
+		if (request_code == EDIT_SESSION_REQUEST){
+			session_id = getIntent().getExtras().getLong("session_id");
+			loadSession(session_id);			
+		}			
 		else
 			setDefaultValues();
 	}
@@ -70,7 +70,6 @@ public class EditSessionActivity extends FragmentActivity implements OnDateSetLi
 		Log.w("EditSession", "Editing session, retrieving session row");
 
 		// retrieve session_row from DB
-		SessionsDAO dataSource = new SessionsDAO(this);
 		dataSource.open();
 		session = dataSource.getSession(session_id);
 
@@ -91,6 +90,8 @@ public class EditSessionActivity extends FragmentActivity implements OnDateSetLi
 			
 
 		}
+		
+		dataSource.close();
 
 	}
 
@@ -183,28 +184,27 @@ public class EditSessionActivity extends FragmentActivity implements OnDateSetLi
 
 			//date is set on validation method
 
-			SessionsDAO dataSource = new SessionsDAO(this);
 			dataSource.open();
 
-			if (session_id == CREATE_SESSION) {
+			if (request_code == ADD_SESSION_REQUEST) {
 
-				Log.w("editSession", "Inserting new record on SESSIONS table");
+				Log.w("EditSessionActivity", "Inserting new record on SESSIONS table");
 
 				Session session = dataSource.createSession(title, date,
 						location, notes);
 
-				Log.w("EditSession",
+				Log.w("EditSessionActivity",
 						"Inserted session. New index = " + session.getId());
 
 			} else {
 
-				Log.w("editSession", "Updating record " + session_id
+				Log.w("EditSessionActivity", "Updating record " + session_id
 						+ " on SESSIONS table");
 
 				dataSource.updateSession(session_id, title, date, location,
 						notes);
 
-				Log.w("editSession", "Record " + session_id
+				Log.w("EditSessionActivity", "Record " + session_id
 						+ " updated on SESSIONS table");
 			}
 			dataSource.close();

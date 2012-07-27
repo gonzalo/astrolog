@@ -70,8 +70,8 @@ public class ListSessionsActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 				int position, long id) {
-				//editSession(values.get(position).getId());
-				listObservations(values.get(position).getId());
+				editSession(values.get(position).getId());
+				//listObservations(values.get(position).getId());
 			}
 		}); 
 		// TODO add long click listener to delete sessions
@@ -89,7 +89,7 @@ public class ListSessionsActivity extends Activity {
 	 */
 	public void addSession(View view) {
 		Intent intent = new Intent(this, EditSessionActivity.class);
-		intent.putExtra("session_id", EditSessionActivity.CREATE_SESSION);
+		intent.putExtra("request_code", EditSessionActivity.ADD_SESSION_REQUEST);
 		startActivityForResult(intent, EditSessionActivity.ADD_SESSION_REQUEST);
 	}
 	
@@ -100,6 +100,7 @@ public class ListSessionsActivity extends Activity {
 	 */
 	public void editSession(long session_id) {
 		Intent intent = new Intent(this, EditSessionActivity.class);
+		intent.putExtra("request_code", EditSessionActivity.EDIT_SESSION_REQUEST);
 		intent.putExtra("session_id", session_id);
 		startActivityForResult(intent, EditSessionActivity.EDIT_SESSION_REQUEST);
 	}
