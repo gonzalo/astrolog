@@ -28,10 +28,9 @@ public class ListSessionsActivity extends Activity {
 		
 		// updateSessionList();
 		dataSource = new SessionsDAO(this);
-		dataSource.open();
 
 		updateSessionList();
-		
+				
 	}
 
 	@Override
@@ -42,18 +41,17 @@ public class ListSessionsActivity extends Activity {
 
 	@Override
 	protected void onResume() {
-		dataSource.open();
 		super.onResume();
 	}
 
 	@Override
 	protected void onPause() {
-		dataSource.close();
 		super.onPause();
 	}	
 	
 	private void updateSessionList() {
-	
+		dataSource.open();
+
 	
 		// filling the viewList
 		ListView listView = (ListView) findViewById(R.id.vl_sessions);
@@ -79,6 +77,8 @@ public class ListSessionsActivity extends Activity {
 		// TODO add long click listener to delete sessions
 		
 		// TODO fill stats counter
+		dataSource.close();
+
 		
 	}
 
@@ -88,7 +88,6 @@ public class ListSessionsActivity extends Activity {
 	 * @param view
 	 */
 	public void addSession(View view) {
-		dataSource.close();
 		Intent intent = new Intent(this, EditSessionActivity.class);
 		intent.putExtra("session_id", EditSessionActivity.CREATE_SESSION);
 		startActivityForResult(intent, EditSessionActivity.ADD_SESSION_REQUEST);
