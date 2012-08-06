@@ -107,7 +107,6 @@
             android:layout_height="wrap_content"
             android:onClick="addSession"
             android:text="@string/add_observation" />
-
         <TextView
             android:id="@+id/lb_summary"
             android:layout_width="fill_parent"
