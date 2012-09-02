@@ -76,7 +76,7 @@ public class EditObservationActivity extends FragmentActivity implements OnDateS
 		if (observation != null) {
 			// fill the text views
 			((EditText) findViewById(R.id.tf_title))
-					.setText(observation.getTitle());
+					.setText(observation.getObjectId());
 			((EditText) findViewById(R.id.tf_location)).setText(observation
 					.getLocation());
 			((EditText) findViewById(R.id.tf_notes))
