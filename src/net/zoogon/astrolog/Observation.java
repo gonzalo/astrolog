@@ -11,8 +11,8 @@ public class Observation {
 	private String telescope;
 	private String eyepiece;
 	private String barlow;
-	private float seeing;
-	private float rate;
+	private float seeing; //1 to 5
+	private float rate; //1 to 5
 	private String notes; 
 	
 	/**

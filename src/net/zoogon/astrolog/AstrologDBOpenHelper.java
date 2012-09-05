@@ -15,7 +15,7 @@ public class AstrologDBOpenHelper extends SQLiteOpenHelper {
 
 	// DB schema metadata
 	public static final String DATABASE_NAME = "AstrologDB.db";
-	public static final int DATABASE_VERSION = 2;
+	public static final int DATABASE_VERSION = 4;
 	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"; //iso8601
 
 	// DB table names
@@ -63,10 +63,6 @@ public class AstrologDBOpenHelper extends SQLiteOpenHelper {
 			+ OBSERVATION_NOTES + " text"
 			+ " );";
 	
-	// Final SQL 
-	private static final String DATABASE_CREATE = TABLE_SESSIONS_CREATE
-			+ " " + TABLE_OBSERVATIONS_CREATE;
-	
 	public AstrologDBOpenHelper(Context context, String name,
 			CursorFactory factory, int version) {
 		super(context, name, factory, version);
@@ -77,7 +73,8 @@ public class AstrologDBOpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		try {
-			db.execSQL(DATABASE_CREATE);
+			db.execSQL(TABLE_SESSIONS_CREATE);
+			db.execSQL(TABLE_OBSERVATIONS_CREATE);
 		} catch (SQLException e) {
 			Log.w("AstrologDBOpenHelper", "Failed to create DB, SQL is not valid");
 		}
@@ -103,7 +100,9 @@ public class AstrologDBOpenHelper extends SQLiteOpenHelper {
 			// KEEP ATENTION OLD DATA WILL BE DROPPED BY THIS METHOD.
 			// ADVANCED VERSIONS SHOULD MIGRATE OLD DATA TO NEW DB SCHEMA	
 			
-			db.execSQL(DATABASE_CREATE);
+			db.execSQL(TABLE_SESSIONS_CREATE);
+			db.execSQL(TABLE_OBSERVATIONS_CREATE);
+			
 		} catch (SQLException e) {
 			Log.w("AstrologDBOpenHelper", "Failed to DELETE DB, SQL is not valid");
 			System.exit(1);

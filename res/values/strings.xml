@@ -31,4 +31,15 @@
     
     <!-- ListObservations -->
 	<string name="add_observation">Add observation</string>
+
+	<!-- EditObservations -->
+	<string name="title_activity_edit_observations">EditObservations</string>
+	<string name="date_time">Date/Time</string>
+	<string name="object_id">Object name</string>
+	<string name="object_id_hint">NGC457 or M27</string>
+	<string name="telescope">Telescope</string>
+	<string name="eyepiece">Eyepiece</string>
+	<string name="barlow">Barlow</string>
+	<string name="seeing">Seeing</string>
+	<string name="rate">Rate object</string>
 </resources>

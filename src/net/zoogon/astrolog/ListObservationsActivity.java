@@ -54,7 +54,8 @@ public class ListObservationsActivity extends Activity {
 		TextView session_title = (TextView) findViewById(R.id.tv_title);
 		session_title.setText(session.getTitle());
 		TextView session_date = (TextView) findViewById(R.id.tv_date);
-		String date_st = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(session.getDate());
+		String date_st = SimpleDateFormat.getDateInstance(
+				SimpleDateFormat.SHORT).format(session.getDate());
 		session_date.setText(date_st);
 		TextView session_location = (TextView) findViewById(R.id.tv_location);
 		session_location.setText(session.getLocation());
@@ -72,6 +73,19 @@ public class ListObservationsActivity extends Activity {
 	}
 
 	/**
+	 * Launch editObservation activity in creation mode
+	 * 
+	 * @param view
+	 */
+	public void addObservation(View view) {
+		Intent intent = new Intent(this, EditObservationActivity.class);
+		intent.putExtra("request_code",
+				EditObservationActivity.ADD_OBSERVATION_REQUEST);
+		startActivityForResult(intent,
+				EditObservationActivity.ADD_OBSERVATION_REQUEST);
+	}
+
+	/**
 	 * Launched after activity called with startActivityForResult finishes
 	 */
 	@Override
@@ -86,6 +100,19 @@ public class ListObservationsActivity extends Activity {
 				long session_id = data.getExtras().getLong("session_id");
 				updateSession(session_id);
 				// TODO: listObservations(session_id);
+				break;
+
+			case Activity.RESULT_CANCELED:
+				popUp(R.string.message_canceled);
+				break;
+			}
+			break;
+		case EditObservationActivity.ADD_OBSERVATION_REQUEST:
+			switch (resultCode) {
+			case Activity.RESULT_OK:
+				//long observation_id = data.getExtras().getLong("observation_id");
+				//updateSession(session_id);
+				//TODO listObservations(session_id);
 				break;
 
 			case Activity.RESULT_CANCELED:
