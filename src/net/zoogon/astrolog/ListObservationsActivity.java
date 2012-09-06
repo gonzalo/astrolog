@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
+//TODO delete observations
+
 public class ListObservationsActivity extends Activity {
 
 	private SessionsDAO sessionsDataSource;
@@ -36,8 +38,6 @@ public class ListObservationsActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_observations);
 
-		// TODO
-		// log
 		Log.w(ACTIVITY_SERVICE, "ListObservationsActivity starting");
 
 		// get session data and load values
@@ -52,14 +52,6 @@ public class ListObservationsActivity extends Activity {
 		// close data sources
 	}
 
-	//TODO check if menu is necessary
-	/*
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_list_observations, menu);
-		return true;
-	}
-	*/
 	
 	private void updateSession() {
 		sessionsDataSource.open();
@@ -88,7 +80,7 @@ public class ListObservationsActivity extends Activity {
 	
 		values = observationsDataSource.getObservationsForSession(session_id);
 	
-		//TODO show message if there is no sessions (invite to create some)
+		//TODO show message if there is no observations (invite to create some)
 		
 		ArrayAdapter<Observation> adapter = new ArrayAdapter<Observation>(this,
 				android.R.layout.simple_list_item_1, values);
@@ -103,7 +95,7 @@ public class ListObservationsActivity extends Activity {
 				editObservation(values.get(position).getId());
 			}
 		}); 
-		// TODO add long click listener to delete sessions
+		
 		
 		// TODO fill stats counter
 		observationsDataSource.close();
@@ -184,11 +176,11 @@ public class ListObservationsActivity extends Activity {
 	 * @param message
 	 */
 	private void popUp(int message) {
-		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 	}
 
 	private void popUp(CharSequence message) {
-		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 	}
 
 }

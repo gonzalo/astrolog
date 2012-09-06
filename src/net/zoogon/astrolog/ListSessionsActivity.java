@@ -13,6 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+//TODO delete sessions
+
 public class ListSessionsActivity extends Activity {
 
 	private SessionsDAO dataSource;
@@ -78,9 +80,7 @@ public class ListSessionsActivity extends Activity {
 				listObservations(values.get(position).getId());
 			}
 		}); 
-		// TODO add long click listener to delete sessions
 		
-		// TODO fill stats counter
 		dataSource.close();
 
 		
@@ -134,7 +134,6 @@ public class ListSessionsActivity extends Activity {
 				break;
 
 			default:
-				// TODO combine with resources %d
 				message = new String("Unknown resultCode " + resultCode
 						+ ". Try it again");
 				popUp(message);

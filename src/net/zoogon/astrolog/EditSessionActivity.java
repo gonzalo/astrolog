@@ -53,7 +53,6 @@ public class EditSessionActivity extends FragmentActivity implements OnDateSetLi
 	}
 
 	private void setDefaultValues() {
-		// TODO Auto-generated method stub
 		date = new Date();
 		String date_st = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(date); 
 		((EditText) findViewById(R.id.tf_date)).setText(date_st);
