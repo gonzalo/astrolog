@@ -17,6 +17,7 @@ public class ObservationsDAO {
 	private AstrologDBOpenHelper dbHelper;
 
 	private String[] allColumns = { AstrologDBOpenHelper.OBSERVATION_ID,
+			AstrologDBOpenHelper.OBSERVATION_SESSION_ID,
 			AstrologDBOpenHelper.OBSERVATION_DATE,
 			AstrologDBOpenHelper.OBSERVATION_OBJECT_ID,
 			AstrologDBOpenHelper.OBSERVATION_TELESCOPE,
@@ -40,14 +41,15 @@ public class ObservationsDAO {
 		dbHelper.close();
 	}
 
-	public Observation createObservation(Date date, String object_id,
-			String telescope, String eyepiece, String barlow, float seeing,
-			float rate, String notes) {
+	public Observation createObservation(long session_id, Date date,
+			String object_id, String telescope, String eyepiece, String barlow,
+			float seeing, float rate, String notes) {
 		ContentValues newValues = new ContentValues();
 
 		String st_date = AstrologDBOpenHelper.formatDateToString(date);
 
 		// preparing row to be inserted
+		newValues.put(AstrologDBOpenHelper.OBSERVATION_SESSION_ID, session_id);
 		newValues.put(AstrologDBOpenHelper.OBSERVATION_DATE, st_date);
 		newValues.put(AstrologDBOpenHelper.OBSERVATION_OBJECT_ID, object_id);
 		newValues.put(AstrologDBOpenHelper.OBSERVATION_TELESCOPE, telescope);
@@ -70,15 +72,16 @@ public class ObservationsDAO {
 		return newObservation;
 	}
 
-	public int updateObservation(long observation_id, Date date,
-			String object_id, String telescope, String eyepiece, String barlow,
-			float seeing, float rate, String notes) {
-		
+	public int updateObservation(long observation_id, long session_id,
+			Date date, String object_id, String telescope, String eyepiece,
+			String barlow, float seeing, float rate, String notes) {
+
 		ContentValues newValues = new ContentValues();
 
 		String st_date = AstrologDBOpenHelper.formatDateToString(date);
 
 		// preparing row to be inserted
+		newValues.put(AstrologDBOpenHelper.OBSERVATION_SESSION_ID, session_id);
 		newValues.put(AstrologDBOpenHelper.OBSERVATION_DATE, st_date);
 		newValues.put(AstrologDBOpenHelper.OBSERVATION_OBJECT_ID, object_id);
 		newValues.put(AstrologDBOpenHelper.OBSERVATION_TELESCOPE, telescope);
@@ -158,11 +161,42 @@ public class ObservationsDAO {
 		return observations;
 	}
 
+	public List<Observation> getObservationsForSession(long session_id) {
+		List<Observation> observations = new ArrayList<Observation>();
+
+		// configuring query
+		// Specify the result column projection. Return the minimum set
+		// of columns required to satisfy your requirements.
+		String[] result_columns = allColumns;
+		String where = AstrologDBOpenHelper.OBSERVATION_SESSION_ID + "="
+				+ session_id;
+		String whereArgs[] = null;
+		String groupBy = null;
+		String having = null;
+		String order = AstrologDBOpenHelper.OBSERVATION_DATE + " DESC";
+
+		Cursor cursor = database.query(
+				AstrologDBOpenHelper.DATABASE_OBSERVATIONS_TABLE,
+				result_columns, where, whereArgs, groupBy, having, order);
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Observation observation = cursorToObservation(cursor);
+			observations.add(observation);
+			cursor.moveToNext();
+		}
+		// Make sure to close the cursor
+		cursor.close();
+		return observations;
+	}
+
 	private Observation cursorToObservation(Cursor cursor) {
 		Observation observation = new Observation();
 
 		int indexId = cursor
 				.getColumnIndexOrThrow(AstrologDBOpenHelper.OBSERVATION_ID);
+		int indexSessionId = cursor
+				.getColumnIndexOrThrow(AstrologDBOpenHelper.OBSERVATION_SESSION_ID);
 		int indexDate = cursor
 				.getColumnIndexOrThrow(AstrologDBOpenHelper.OBSERVATION_DATE);
 		int indexObjectId = cursor
@@ -181,6 +215,7 @@ public class ObservationsDAO {
 				.getColumnIndexOrThrow(AstrologDBOpenHelper.OBSERVATION_NOTES);
 
 		observation.setId(cursor.getLong(indexId));
+		observation.setSessionId(cursor.getLong(indexSessionId));
 		observation.setDate(AstrologDBOpenHelper.formatStringToDate(cursor
 				.getString(indexDate)));
 		observation.setObjectId(cursor.getString(indexObjectId));

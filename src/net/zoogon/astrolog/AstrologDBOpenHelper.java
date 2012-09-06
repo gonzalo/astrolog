@@ -15,7 +15,7 @@ public class AstrologDBOpenHelper extends SQLiteOpenHelper {
 
 	// DB schema metadata
 	public static final String DATABASE_NAME = "AstrologDB.db";
-	public static final int DATABASE_VERSION = 4;
+	public static final int DATABASE_VERSION = 5;
 	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"; //iso8601
 
 	// DB table names
@@ -31,6 +31,7 @@ public class AstrologDBOpenHelper extends SQLiteOpenHelper {
 	
 	// DB observations table columns names
 	public static final String OBSERVATION_ID = "_id";
+	public static final String OBSERVATION_SESSION_ID = "session_id";
 	public static final String OBSERVATION_DATE = "date";
 	public static final String OBSERVATION_OBJECT_ID = "object_id";
 	public static final String OBSERVATION_TELESCOPE = "telescope";
@@ -53,6 +54,7 @@ public class AstrologDBOpenHelper extends SQLiteOpenHelper {
 	private static final String TABLE_OBSERVATIONS_CREATE = "create table "
 			+ DATABASE_OBSERVATIONS_TABLE + " ("
 			+ OBSERVATION_ID + " integer primary key autoincrement, "
+			+ OBSERVATION_SESSION_ID + " integer not null, "
 			+ OBSERVATION_DATE + " date not null, "
 			+ OBSERVATION_OBJECT_ID + " text not null, "
 			+ OBSERVATION_TELESCOPE + " text not null, "

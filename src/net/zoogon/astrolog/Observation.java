@@ -6,6 +6,7 @@ import java.util.Date;
 public class Observation {
 	
 	private long _id;
+	private long session_id;
 	private Date date;
 	private String object_id;
 	private String telescope;
@@ -26,6 +27,18 @@ public class Observation {
 	 */
 	public void setId(long _id) {
 		this._id = _id;
+	}
+	/**
+	 * @return the session_id
+	 */
+	public long getSessionId() {
+		return session_id;
+	}
+	/**
+	 * @param _id the _id to set
+	 */
+	public void setSessionId(long session_id) {
+		this.session_id = session_id;
 	}
 	/**
 	 * @return the date

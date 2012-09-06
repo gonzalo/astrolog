@@ -9,17 +9,22 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class ListObservationsActivity extends Activity {
 
 	private SessionsDAO sessionsDataSource;
+	private ObservationsDAO observationsDataSource;
+	private List<Observation> values;
 	private Session session;
 	private long session_id;
 
-	// private ObservationsDAO observationsDataSource;
-	// private List<Observation> values;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -35,11 +40,12 @@ public class ListObservationsActivity extends Activity {
 		// get session data and load values
 		session_id = getIntent().getExtras().getLong("session_id");
 		sessionsDataSource = new SessionsDAO(this);
-		sessionsDataSource.open();
+		observationsDataSource = new ObservationsDAO(this);
+
 		updateSession(session_id);
 
 		// get session observations and load on viewlist
-
+		updateObservationList();
 		// close data sources
 	}
 
@@ -50,6 +56,8 @@ public class ListObservationsActivity extends Activity {
 	}
 
 	private void updateSession(long session_id) {
+		sessionsDataSource.open();
+
 		session = sessionsDataSource.getSession(session_id);
 		TextView session_title = (TextView) findViewById(R.id.tv_title);
 		session_title.setText(session.getTitle());
@@ -61,9 +69,41 @@ public class ListObservationsActivity extends Activity {
 		session_location.setText(session.getLocation());
 		TextView session_notes = (TextView) findViewById(R.id.tv_notes);
 		session_notes.setText(session.getNotes());
+		sessionsDataSource.close();
 
 	}
+	
+	private void updateObservationList() {
+		observationsDataSource.open();
 
+	
+		// filling the viewList
+		ListView listView = (ListView) findViewById(R.id.vl_observations);
+	
+		values = observationsDataSource.getObservationsForSession(session_id);
+	
+		//TODO show message if there is no sessions (invite to create some)
+		
+		ArrayAdapter<Observation> adapter = new ArrayAdapter<Observation>(this,
+				android.R.layout.simple_list_item_1, values);
+		
+		listView.setAdapter(adapter);
+		
+		// add a event to each row
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+				int position, long id) {
+				//editObservation(values.get(position).getId());
+			}
+		}); 
+		// TODO add long click listener to delete sessions
+		
+		// TODO fill stats counter
+		observationsDataSource.close();
+
+		
+	}
 	public void editSession(View view) {
 		Intent intent = new Intent(this, EditSessionActivity.class);
 		intent.putExtra("request_code",
@@ -79,6 +119,7 @@ public class ListObservationsActivity extends Activity {
 	 */
 	public void addObservation(View view) {
 		Intent intent = new Intent(this, EditObservationActivity.class);
+		intent.putExtra("session_id", session_id);
 		intent.putExtra("request_code",
 				EditObservationActivity.ADD_OBSERVATION_REQUEST);
 		startActivityForResult(intent,
@@ -90,8 +131,6 @@ public class ListObservationsActivity extends Activity {
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-		sessionsDataSource.open();
 
 		switch (requestCode) {
 		case EditSessionActivity.EDIT_SESSION_REQUEST:
@@ -110,9 +149,7 @@ public class ListObservationsActivity extends Activity {
 		case EditObservationActivity.ADD_OBSERVATION_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				//long observation_id = data.getExtras().getLong("observation_id");
-				//updateSession(session_id);
-				//TODO listObservations(session_id);
+				updateObservationList();
 				break;
 
 			case Activity.RESULT_CANCELED:

@@ -25,6 +25,7 @@ public class EditObservationActivity extends FragmentActivity implements
 	private ObservationsDAO dataSource;
 	private int request_code;
 	private long observation_id;
+	private long session_id;
 
 	private Date date;
 	private String object_id;
@@ -44,6 +45,7 @@ public class EditObservationActivity extends FragmentActivity implements
 
 		dataSource = new ObservationsDAO(this);
 
+		session_id = getIntent().getExtras().getLong("session_id");
 		// check if main activity wants to create a new observation
 		// or edit an existing one
 		request_code = getIntent().getExtras().getInt("request_code");
@@ -199,7 +201,7 @@ public class EditObservationActivity extends FragmentActivity implements
 				Log.w("EditObservationActivity",
 						"Inserting new record on OBSERVATIONS table");
 
-				Observation observation = dataSource.createObservation(date,
+				Observation observation = dataSource.createObservation(session_id, date,
 						object_id, telescope, eyepiece, barlow, seeing, rate,
 						notes);
 				observation_id = observation.getId();
@@ -212,7 +214,7 @@ public class EditObservationActivity extends FragmentActivity implements
 				Log.w("EditObservationActivity", "Updating record "
 						+ observation_id + " on OBSERVATIONS table");
 
-				dataSource.updateObservation(observation_id, date, object_id,
+				dataSource.updateObservation(session_id, observation_id, date, object_id,
 						telescope, eyepiece, barlow, seeing, rate, notes);
 
 				Log.w("EditObservationActivity", "Record " + observation_id
