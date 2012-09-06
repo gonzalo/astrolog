@@ -18,6 +18,10 @@ public class ListSessionsActivity extends Activity {
 	private SessionsDAO dataSource;
 	private List<Session> values;
 
+	//request codes for onActivityResult
+	public static final int ADD_SESSION_REQUEST = 1; 
+	public static final int EDIT_SESSION_REQUEST = 2;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -90,20 +94,9 @@ public class ListSessionsActivity extends Activity {
 	public void addSession(View view) {
 		Intent intent = new Intent(this, EditSessionActivity.class);
 		intent.putExtra("request_code", EditSessionActivity.ADD_SESSION_REQUEST);
-		startActivityForResult(intent, EditSessionActivity.ADD_SESSION_REQUEST);
+		startActivityForResult(intent, ADD_SESSION_REQUEST);
 	}
-	
-	/**
-	 * Launch editSession activity to edit some session
-	 * 
-	 * @param view
-	 */
-	public void editSession(long session_id) {
-		Intent intent = new Intent(this, EditSessionActivity.class);
-		intent.putExtra("request_code", EditSessionActivity.EDIT_SESSION_REQUEST);
-		intent.putExtra("session_id", session_id);
-		startActivityForResult(intent, EditSessionActivity.EDIT_SESSION_REQUEST);
-	}
+
 	
 	/**
 	 * Launch ListObservations activity 
@@ -112,7 +105,7 @@ public class ListSessionsActivity extends Activity {
 	public void listObservations(long session_id){
 		Intent intent = new Intent(this, ListObservationsActivity.class);
 		intent.putExtra("session_id", session_id);
-		startActivity(intent);
+		startActivityForResult(intent, EDIT_SESSION_REQUEST);
 	}
 	
 	/**
@@ -126,19 +119,17 @@ public class ListSessionsActivity extends Activity {
 		dataSource.open();
 
 		switch (requestCode) {
-		case EditSessionActivity.ADD_SESSION_REQUEST:
-		case EditSessionActivity.EDIT_SESSION_REQUEST:
+		//TODO update list and request codes
+		case ADD_SESSION_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				popUp(R.string.message_done);
-				//TODO instead of popup I should open session to add
-				//new observations
 				long session_id = data.getExtras().getLong("session_id");
 				updateSessionList();
 				listObservations(session_id);
 				break;
 
 			case Activity.RESULT_CANCELED:
+				updateSessionList();
 				popUp(R.string.message_canceled);
 				break;
 
@@ -150,6 +141,8 @@ public class ListSessionsActivity extends Activity {
 
 				break;
 			}
+		case EDIT_SESSION_REQUEST:
+			updateSessionList();
 			break;
 		default:
 			popUp(R.string.message_unknow_requestCode);
@@ -164,11 +157,11 @@ public class ListSessionsActivity extends Activity {
 	 * @param message
 	 */
 	private void popUp(int message) {
-		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 	}
 
 	private void popUp(CharSequence message) {
-		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 	}
 
 }

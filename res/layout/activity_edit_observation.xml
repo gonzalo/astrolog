@@ -45,13 +45,22 @@
                 android:inputType="text"
                 android:onClick="showDatePickerDialog" />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="showTimePickerDialog"
+            android:text="@string/pick_time" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="showDatePickerDialog"
             android:text="@string/pick_date" />
-
+        </LinearLayout>
         <TextView
             android:id="@+id/lb_object_id"
             android:layout_width="wrap_content"

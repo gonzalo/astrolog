@@ -23,6 +23,11 @@ public class ListObservationsActivity extends Activity {
 	private List<Observation> values;
 	private Session session;
 	private long session_id;
+	
+	//request codes for onActivityResult
+	public static final int ADD_OBSERVATION_REQUEST = 1;
+	public static final int EDIT_OBSERVATION_REQUEST = 2; 
+	public static final int EDIT_SESSION_REQUEST = 3;
 
 	
 
@@ -35,27 +40,28 @@ public class ListObservationsActivity extends Activity {
 		// log
 		Log.w(ACTIVITY_SERVICE, "ListObservationsActivity starting");
 
-		// open data sources
-
 		// get session data and load values
 		session_id = getIntent().getExtras().getLong("session_id");
 		sessionsDataSource = new SessionsDAO(this);
 		observationsDataSource = new ObservationsDAO(this);
 
-		updateSession(session_id);
+		updateSession();
 
 		// get session observations and load on viewlist
 		updateObservationList();
 		// close data sources
 	}
 
+	//TODO check if menu is necessary
+	/*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_list_observations, menu);
 		return true;
 	}
-
-	private void updateSession(long session_id) {
+	*/
+	
+	private void updateSession() {
 		sessionsDataSource.open();
 
 		session = sessionsDataSource.getSession(session_id);
@@ -94,7 +100,7 @@ public class ListObservationsActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 				int position, long id) {
-				//editObservation(values.get(position).getId());
+				editObservation(values.get(position).getId());
 			}
 		}); 
 		// TODO add long click listener to delete sessions
@@ -109,7 +115,7 @@ public class ListObservationsActivity extends Activity {
 		intent.putExtra("request_code",
 				EditSessionActivity.EDIT_SESSION_REQUEST);
 		intent.putExtra("session_id", session_id);
-		startActivityForResult(intent, EditSessionActivity.EDIT_SESSION_REQUEST);
+		startActivityForResult(intent, EDIT_SESSION_REQUEST);
 	}
 
 	/**
@@ -122,8 +128,16 @@ public class ListObservationsActivity extends Activity {
 		intent.putExtra("session_id", session_id);
 		intent.putExtra("request_code",
 				EditObservationActivity.ADD_OBSERVATION_REQUEST);
-		startActivityForResult(intent,
-				EditObservationActivity.ADD_OBSERVATION_REQUEST);
+		startActivityForResult(intent, ADD_OBSERVATION_REQUEST);
+	}
+
+	
+	public void editObservation(long observation_id) {
+		Intent intent = new Intent(this, EditObservationActivity.class);
+		intent.putExtra("request_code",
+				EditObservationActivity.EDIT_OBSERVATION_REQUEST);
+		intent.putExtra("observation_id", observation_id);
+		startActivityForResult(intent, EDIT_OBSERVATION_REQUEST);
 	}
 
 	/**
@@ -133,12 +147,11 @@ public class ListObservationsActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		switch (requestCode) {
-		case EditSessionActivity.EDIT_SESSION_REQUEST:
+		case EDIT_SESSION_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				long session_id = data.getExtras().getLong("session_id");
-				updateSession(session_id);
-				// TODO: listObservations(session_id);
+				session_id = data.getExtras().getLong("session_id");
+				updateSession();
 				break;
 
 			case Activity.RESULT_CANCELED:
@@ -146,7 +159,8 @@ public class ListObservationsActivity extends Activity {
 				break;
 			}
 			break;
-		case EditObservationActivity.ADD_OBSERVATION_REQUEST:
+		case ADD_OBSERVATION_REQUEST:
+		case EDIT_OBSERVATION_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
 				updateObservationList();

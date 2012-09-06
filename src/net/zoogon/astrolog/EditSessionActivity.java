@@ -102,7 +102,7 @@ public class EditSessionActivity extends FragmentActivity implements OnDateSetLi
 	}
 
 	public void showDatePickerDialog(View v) {
-		DialogFragment newFragment = new DatePickerFragment();
+		DialogFragment newFragment = new DatePickerFragmentSession();
 		
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);

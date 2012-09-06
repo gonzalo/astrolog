@@ -6,18 +6,19 @@ import java.util.Date;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.TimePicker;
 import android.widget.EditText;
 import android.widget.RatingBar;
 
 public class EditObservationActivity extends FragmentActivity implements
-		OnDateSetListener {
+		OnDateSetListener, OnTimeSetListener {
 
 	public static final int ADD_OBSERVATION_REQUEST = 1;
 	public static final int EDIT_OBSERVATION_REQUEST = 0;
@@ -45,7 +46,6 @@ public class EditObservationActivity extends FragmentActivity implements
 
 		dataSource = new ObservationsDAO(this);
 
-		session_id = getIntent().getExtras().getLong("session_id");
 		// check if main activity wants to create a new observation
 		// or edit an existing one
 		request_code = getIntent().getExtras().getInt("request_code");
@@ -53,12 +53,14 @@ public class EditObservationActivity extends FragmentActivity implements
 		if (request_code == EDIT_OBSERVATION_REQUEST) {
 			observation_id = getIntent().getExtras().getLong("observation_id");
 			loadObservation(observation_id);
-		} else
+		} else {
+			session_id = getIntent().getExtras().getLong("session_id");
 			setDefaultValues();
+		}
+
 	}
 
 	private void setDefaultValues() {
-		// TODO Auto-generated method stub
 		date = new Date();
 		String date_st = SimpleDateFormat.getDateInstance(
 				SimpleDateFormat.SHORT).format(date);
@@ -86,36 +88,38 @@ public class EditObservationActivity extends FragmentActivity implements
 
 		if (observation != null) {
 
-			// TODO fill the text views
-			/*
-			 * ((EditText) findViewById(R.id.tf_title))
-			 * .setText(observation.getObjectId()); ((EditText)
-			 * findViewById(R.id.tf_location)).setText(observation
-			 * .getLocation()); ((EditText) findViewById(R.id.tf_notes))
-			 * .setText(observation.getNotes());
-			 * 
-			 * date = observation.getDate(); String date_st =
-			 * SimpleDateFormat.getDateInstance
-			 * (SimpleDateFormat.SHORT).format(date);
-			 * 
-			 * 
-			 * ((EditText) findViewById(R.id.tf_date)).setText(date_st);
-			 */
+			session_id = observation.getSessionId();
+			date = observation.getDatetime();
+			object_id = observation.getObjectId();
+			telescope = observation.getTelescope();
+			eyepiece = observation.getEyepiece();
+			barlow = observation.getBarlow();
+			seeing = observation.getSeeing();
+			rate = observation.getRate();
+			notes = observation.getNotes();
 
+			String date_st = SimpleDateFormat.getDateInstance(
+					SimpleDateFormat.SHORT).format(date);
+			String time_st = SimpleDateFormat.getTimeInstance(
+					SimpleDateFormat.SHORT).format(date);
+			((EditText) findViewById(R.id.tf_date)).setText(date_st);
+			((EditText) findViewById(R.id.tf_time)).setText(time_st);
+			((EditText) findViewById(R.id.tf_object_id)).setText(object_id);
+
+			((EditText) findViewById(R.id.tf_telescope)).setText(telescope);
+			((EditText) findViewById(R.id.tf_eyepiece)).setText(eyepiece);
+			((EditText) findViewById(R.id.tf_barlow)).setText(barlow);
+			((RatingBar) findViewById(R.id.rb_rate)).setRating(rate);
+			((RatingBar) findViewById(R.id.rb_seeing)).setRating(seeing);
+			((EditText) findViewById(R.id.tf_notes)).setText(notes);
 		}
 
 		dataSource.close();
 
 	}
 
-	// TODO what about menu button?
-	/*
-	 * @Override public boolean onCreateOptionsMenu(Menu menu) {
-	 * getMenuInflater().inflate(R.menu.activity_edit_observation, menu); return
-	 * true; }
-	 */
 	public void showDatePickerDialog(View v) {
-		DialogFragment newFragment = new DatePickerFragment();
+		DialogFragment newFragment = new DatePickerFragmentObservation();
 
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
@@ -129,15 +133,38 @@ public class EditObservationActivity extends FragmentActivity implements
 
 	@Override
 	public void onDateSet(DatePicker view, int year, int month, int day) {
-		// TODO update date and tf_date
 		Calendar cal = Calendar.getInstance();
-		cal.set(year, month, day);
+		cal.setTime(date);
+		cal.set(year, month, day, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
 		date = cal.getTime();
 		String date_st = SimpleDateFormat.getDateInstance(
 				SimpleDateFormat.SHORT).format(date);
 		((EditText) findViewById(R.id.tf_date)).setText(date_st);
 	}
 
+	public void showTimePickerDialog(View v) {
+		DialogFragment newFragment = new TimePickerFragmentObservation();
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		Bundle args = new Bundle();
+		args.putInt("hourOfDay", cal.get(Calendar.HOUR_OF_DAY));
+		args.putInt("minute", cal.get(Calendar.MINUTE));
+		newFragment.setArguments(args);
+		newFragment.show(getSupportFragmentManager(), "timePicker");
+	}	
+	
+	@Override
+	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
+		date = cal.getTime();
+
+		String time_st = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(date); 
+		((EditText) findViewById(R.id.tf_time)).setText(time_st);
+		
+	}
 	/**
 	 * Checks if input files are valid to be inserted in DB
 	 * 
@@ -148,16 +175,6 @@ public class EditObservationActivity extends FragmentActivity implements
 		boolean flag = true;
 
 		EditText tf_to_validate;
-
-		// Date is valid date
-		tf_to_validate = (EditText) findViewById(R.id.tf_date);
-
-		try {
-			date = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT)
-					.parse(tf_to_validate.getText().toString());
-		} catch (Exception e) {
-			flag = false;
-		}
 
 		// object id not empty
 		tf_to_validate = (EditText) findViewById(R.id.tf_object_id);
@@ -201,9 +218,9 @@ public class EditObservationActivity extends FragmentActivity implements
 				Log.w("EditObservationActivity",
 						"Inserting new record on OBSERVATIONS table");
 
-				Observation observation = dataSource.createObservation(session_id, date,
-						object_id, telescope, eyepiece, barlow, seeing, rate,
-						notes);
+				Observation observation = dataSource.createObservation(
+						session_id, date, object_id, telescope, eyepiece,
+						barlow, seeing, rate, notes);
 				observation_id = observation.getId();
 
 				Log.w("EditObservationActivity",
@@ -214,8 +231,9 @@ public class EditObservationActivity extends FragmentActivity implements
 				Log.w("EditObservationActivity", "Updating record "
 						+ observation_id + " on OBSERVATIONS table");
 
-				dataSource.updateObservation(session_id, observation_id, date, object_id,
-						telescope, eyepiece, barlow, seeing, rate, notes);
+				dataSource.updateObservation(observation_id, session_id, date,
+						object_id, telescope, eyepiece, barlow, seeing, rate,
+						notes);
 
 				Log.w("EditObservationActivity", "Record " + observation_id
 						+ " updated on OBSERVATIONS table");
@@ -232,4 +250,5 @@ public class EditObservationActivity extends FragmentActivity implements
 		setResult(Activity.RESULT_OK, resultIntent);
 		finish();
 	}
+
 }

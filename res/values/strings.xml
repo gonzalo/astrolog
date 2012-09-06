@@ -35,6 +35,7 @@
 	<!-- EditObservations -->
 	<string name="title_activity_edit_observations">EditObservations</string>
 	<string name="date_time">Date/Time</string>
+	<string name="pick_time">Pick Time</string>
 	<string name="object_id">Object name</string>
 	<string name="object_id_hint">NGC457 or M27</string>
 	<string name="telescope">Telescope</string>

@@ -9,7 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.widget.DatePicker;
 
-public class DatePickerFragment extends DialogFragment{
+public class DatePickerFragmentSession extends DialogFragment{
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
