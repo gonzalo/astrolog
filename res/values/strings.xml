@@ -26,7 +26,7 @@
     <!-- EditSession -->
     <string name="error_title_length_0">You must enter a title</string>
     <string name="error_location_length_0">You must enter a location</string>
-    <string name="pick_date">Pick date</string>
+    <string name="pick_date">Date</string>
     <string name="title_activity_list_observations">ListObservations</string>
     
     <!-- ListObservations -->
@@ -37,7 +37,7 @@
 	<string name="date_time">Date/Time</string>
 	<string name="local">Local: </string>
 	<string name="ut">UT: </string>
-	<string name="pick_time">Pick Time</string>
+	<string name="pick_time">Time</string>
 	<string name="object_id">Object name</string>
 	<string name="object_id_hint">NGC457 or M27</string>
 	<string name="telescope">Telescope</string>

@@ -18,37 +18,31 @@
             android:text="@string/date_time"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:id="@+id/lb_local_date_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/date_time_test_st"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-        </RelativeLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_small"
             android:orientation="horizontal" >
 
+            <TextView
+                android:id="@+id/lb_local_date_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:text="@string/date_time_test_st"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
+                android:layout_weight="0.2"
                 android:onClick="showDatePickerDialog"
                 android:text="@string/pick_date" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
+                android:layout_weight="0.2"
                 android:onClick="showTimePickerDialog"
                 android:text="@string/pick_time" />
         </LinearLayout>
