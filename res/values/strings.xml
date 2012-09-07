@@ -41,6 +41,11 @@
     <string name="add_observation">Add observation</string> 
     <string name="edit_session">Edit Session</string>
     <string name="remove_session">Remove session</string>
+    <string name="confirm_delete">Confirm delete</string>
+    <string name="delete_session_warning">Are you sure you want to delete session? <br/>(All observations will be lost)</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    
 
     <!-- EditObservations -->
     <string name="title_activity_edit_observations">Observation details</string>

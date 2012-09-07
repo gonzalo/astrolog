@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.util.Log;
@@ -67,7 +69,7 @@ public class ListObservationsActivity extends Activity {
 			editSession();
 			return true;
 		case R.id.remove_session:
-			deleteSession();
+			showAlertOnDelete();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -152,6 +154,7 @@ public class ListObservationsActivity extends Activity {
 				EditObservationActivity.ADD_OBSERVATION_REQUEST);
 		startActivityForResult(intent, ADD_OBSERVATION_REQUEST);
 	}
+
 	public void addObservation() {
 		Intent intent = new Intent(this, EditObservationActivity.class);
 		intent.putExtra("session_id", session_id);
@@ -202,6 +205,31 @@ public class ListObservationsActivity extends Activity {
 			popUp(R.string.message_unknow_requestCode);
 			break;
 		}
+	}
+
+	private void showAlertOnDelete() {
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				case DialogInterface.BUTTON_POSITIVE:
+					deleteSession();
+					break;
+
+				case DialogInterface.BUTTON_NEGATIVE:
+					// nothing to do
+					break;
+				}
+			}
+		};
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setIcon(R.drawable.ic_remove)
+				.setTitle(getText(R.string.confirm_delete))
+				.setMessage(getText(R.string.delete_session_warning))
+				.setPositiveButton(getText(R.string.yes), dialogClickListener)
+				.setNegativeButton(getText(R.string.no), dialogClickListener)
+				.show();
 	}
 
 	private void deleteSession() {
