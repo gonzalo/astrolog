@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -62,13 +63,19 @@ public class EditObservationActivity extends FragmentActivity implements
 
 	private void setDefaultValues() {
 		date = new Date();
-		String date_st = SimpleDateFormat.getDateInstance(
-				SimpleDateFormat.SHORT).format(date);
-		String time_st = SimpleDateFormat.getTimeInstance(
-				SimpleDateFormat.SHORT).format(date);
-		((EditText) findViewById(R.id.tf_date)).setText(date_st);
-		((EditText) findViewById(R.id.tf_time)).setText(time_st);
+	
+		updateDateLabel(date);
+	}
+	
+	private void updateDateLabel(Date date){
 
+		String local_time_st = SimpleDateFormat.getDateInstance(
+				SimpleDateFormat.SHORT).format(date)
+				+ " - "
+				+ SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT)
+						.format(date);
+		((TextView) findViewById(R.id.lb_local_date_time))
+		.setText(local_time_st);
 	}
 
 	/**
@@ -98,12 +105,8 @@ public class EditObservationActivity extends FragmentActivity implements
 			rate = observation.getRate();
 			notes = observation.getNotes();
 
-			String date_st = SimpleDateFormat.getDateInstance(
-					SimpleDateFormat.SHORT).format(date);
-			String time_st = SimpleDateFormat.getTimeInstance(
-					SimpleDateFormat.SHORT).format(date);
-			((EditText) findViewById(R.id.tf_date)).setText(date_st);
-			((EditText) findViewById(R.id.tf_time)).setText(time_st);
+			updateDateLabel(date);
+
 			((EditText) findViewById(R.id.tf_object_id)).setText(object_id);
 
 			((EditText) findViewById(R.id.tf_telescope)).setText(telescope);
@@ -135,11 +138,11 @@ public class EditObservationActivity extends FragmentActivity implements
 	public void onDateSet(DatePicker view, int year, int month, int day) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		cal.set(year, month, day, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
+		cal.set(year, month, day, cal.get(Calendar.HOUR_OF_DAY),
+				cal.get(Calendar.MINUTE));
 		date = cal.getTime();
-		String date_st = SimpleDateFormat.getDateInstance(
-				SimpleDateFormat.SHORT).format(date);
-		((EditText) findViewById(R.id.tf_date)).setText(date_st);
+		updateDateLabel(date);
+
 	}
 
 	public void showTimePickerDialog(View v) {
@@ -152,19 +155,21 @@ public class EditObservationActivity extends FragmentActivity implements
 		args.putInt("minute", cal.get(Calendar.MINUTE));
 		newFragment.setArguments(args);
 		newFragment.show(getSupportFragmentManager(), "timePicker");
-	}	
-	
+	}
+
 	@Override
 	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
+		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+				cal.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
 		date = cal.getTime();
 
-		String time_st = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(date); 
-		((EditText) findViewById(R.id.tf_time)).setText(time_st);
-		
+		updateDateLabel(date);
+
+
 	}
+
 	/**
 	 * Checks if input files are valid to be inserted in DB
 	 * 

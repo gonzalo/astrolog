@@ -12,54 +12,43 @@
         android:padding="@dimen/padding_small" >
 
         <TextView
-            android:id="@+id/lb_date_time"
+            android:id="@+id/lb_date_time_st"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/date_time"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
-            <EditText
-                android:id="@+id/tf_date"
-                android:layout_width="0dip"
+            <TextView
+                android:id="@+id/lb_local_date_time"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:ems="10"
-                android:enabled="false"
-                android:hint="@string/title"
-                android:inputType="text"
-                android:onClick="showDatePickerDialog" />
-
-            <EditText
-                android:id="@+id/tf_time"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:ems="10"
-                android:enabled="false"
-                android:hint="@string/title"
-                android:inputType="text"
-                android:onClick="showDatePickerDialog" />
-        </LinearLayout>
+                android:layout_centerInParent="true"
+                android:text="@string/date_time_test_st"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_small"
             android:orientation="horizontal" >
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.5"
                 android:onClick="showDatePickerDialog"
                 android:text="@string/pick_date" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.5"
                 android:onClick="showTimePickerDialog"
                 android:text="@string/pick_time" />
         </LinearLayout>
