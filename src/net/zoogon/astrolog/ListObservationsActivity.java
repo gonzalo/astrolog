@@ -142,12 +142,11 @@ public class ListObservationsActivity extends Activity {
 		case EDIT_SESSION_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				session_id = data.getExtras().getLong("session_id");
 				updateSession();
 				break;
 
 			case Activity.RESULT_CANCELED:
-				popUp(R.string.message_canceled);
+				//popUp(R.string.message_canceled);
 				break;
 			}
 			break;
@@ -159,7 +158,7 @@ public class ListObservationsActivity extends Activity {
 				break;
 
 			case Activity.RESULT_CANCELED:
-				popUp(R.string.message_canceled);
+				//popUp(R.string.message_canceled);
 				break;
 			}
 			break;

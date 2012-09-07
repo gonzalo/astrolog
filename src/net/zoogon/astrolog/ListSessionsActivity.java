@@ -119,7 +119,6 @@ public class ListSessionsActivity extends Activity {
 		dataSource.open();
 
 		switch (requestCode) {
-		//TODO update list and request codes
 		case ADD_SESSION_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
