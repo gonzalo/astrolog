@@ -202,7 +202,7 @@ public class EditObservationActivity extends FragmentActivity implements
 		// object id not empty
 		tf_to_validate = (EditText) findViewById(R.id.tf_object_id);
 		if (tf_to_validate.getText().toString().length() == 0) {
-			tf_to_validate.setError(getText(R.string.error_title_length_0));
+			tf_to_validate.setError(getText(R.string.error_name_required));
 			flag = false;
 		} else {
 			tf_to_validate.setError(null);

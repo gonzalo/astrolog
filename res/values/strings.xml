@@ -21,31 +21,46 @@
     <string name="location">Location</string>
     <string name="notes">Notes</string>
     <string name="save">Save</string>
-    <string name="title_activity_list_sessions">ListSessions</string>
-
+    <string name="title_activity_list_sessions">Registered sessions</string>
+    <plurals name="numberOfObservations">
+        <item quantity="one">%d object</item>
+        <item quantity="other">%d objects</item>
+    </plurals>
+    <plurals name="numberOfSessions">
+        <item quantity="one"> in %d session</item>
+        <item quantity="other"> in %d sessions</item>
+    </plurals>
+    
     <!-- EditSession -->
     <string name="error_title_length_0">You must enter a title</string>
     <string name="error_location_length_0">You must enter a location</string>
     <string name="pick_date">Date</string>
-    <string name="title_activity_list_observations">ListObservations</string>
-    
-    <!-- ListObservations -->
-	<string name="add_observation">Add observation</string>
-	<string name="remove_session">Remove session</string>
+    <string name="title_activity_list_observations">Session details</string>
 
-	<!-- EditObservations -->
-	<string name="title_activity_edit_observations">EditObservations</string>
-	<string name="date_time">Date/Time</string>
-	<string name="local">Local: </string>
-	<string name="ut">UT: </string>
-	<string name="pick_time">Time</string>
-	<string name="object_id">Object name</string>
-	<string name="object_id_hint">NGC457 or M27</string>
-	<string name="telescope">Telescope</string>
-	<string name="eyepiece">Eyepiece</string>
-	<string name="barlow">Barlow</string>
-	<string name="seeing">Seeing</string>
-	<string name="rate">Rate object</string>   
-	<string name="date_time_test_st">xx/xx/xxxx - xx:xx</string>
-	<string name="remove_observation">Remove observation</string>
+    <!-- ListObservations -->
+    <string name="add_observation">Add observation</string>
+    <string name="remove_session">Remove session</string>
+
+    <!-- EditObservations -->
+    <string name="title_activity_edit_observations">Observation details</string>
+    <string name="date_time">Date/Time</string>
+    <string name="local">Local: </string>
+    <string name="ut">UT: </string>
+    <string name="pick_time">Time</string>
+    <string name="object_id">Object name/ID</string>
+    <string name="object_id_hint">NGC457 or M27</string>
+    <string name="telescope">Telescope</string>
+    <string name="eyepiece">Eyepiece</string>
+    <string name="barlow">Barlow</string>
+    <string name="seeing">Seeing</string>
+    <string name="rate">Rate object</string>
+    <string name="date_time_test_st">xx/xx/xxxx - xx:xx</string>
+    <string name="remove_observation">Remove observation</string>
+    <string name="error_name_required">You must enter an object id or name</string>
+
+    <plurals name="numberOfObjects">
+        <item quantity="one">%d object observed</item>
+        <item quantity="other">%d objects observed</item>
+    </plurals>
+
 </resources>

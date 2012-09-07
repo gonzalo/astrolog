@@ -7,6 +7,7 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -114,7 +115,12 @@ public class SessionsDAO {
 		cursor.close();
 		return sessions;
 	}
-
+	
+	public int getAllSessionNumber() {
+		int rows = (int) DatabaseUtils.queryNumEntries(database,
+				AstrologDBOpenHelper.DATABASE_SESSIONS_TABLE);
+		return rows;
+	}
 	public Session getSession(long id) {
 		Session session = new Session();
 

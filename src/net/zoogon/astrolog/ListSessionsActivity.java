@@ -4,6 +4,7 @@ import java.util.List;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -11,12 +12,15 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
 public class ListSessionsActivity extends Activity {
 
-	private SessionsDAO dataSource;
+	private SessionsDAO sessionDataSource;
+	private ObservationsDAO observationDataSource;
+	
 	private List<Session> values;
 
 	//request codes for onActivityResult
@@ -32,8 +36,9 @@ public class ListSessionsActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		// updateSessionList();
-		dataSource = new SessionsDAO(this);
-
+		sessionDataSource = new SessionsDAO(this);
+		observationDataSource = new ObservationsDAO(this);
+		
 		updateSessionList();
 				
 	}
@@ -55,14 +60,15 @@ public class ListSessionsActivity extends Activity {
 	}	
 	
 	private void updateSessionList() {
-		dataSource.open();
+		
+
+		sessionDataSource.open();
 
 	
 		// filling the viewList
 		ListView listView = (ListView) findViewById(R.id.vl_sessions);
 	
-		values = dataSource.getAllSessions();
-	
+		values = sessionDataSource.getAllSessions();
 		//TODO show message if there is no sessions (invite to create some)
 		
 		ArrayAdapter<Session> adapter = new ArrayAdapter<Session>(this,
@@ -75,16 +81,37 @@ public class ListSessionsActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 				int position, long id) {
-				//editSession(values.get(position).getId());
 				listObservations(values.get(position).getId());
 			}
 		}); 
 		
-		dataSource.close();
+		sessionDataSource.close();
 
-		
+		updateSummary();
 	}
+	
+	private void updateSummary() {
+		String summary_st = "";
+		int nSessions, nObservations;
+		Resources res = getResources();
+		
+		observationDataSource.open();
+		nObservations = observationDataSource.getAllObservationsNumber();
+		observationDataSource.close();
+		
+		sessionDataSource.open();
+		nSessions = sessionDataSource.getAllSessionNumber();
+		sessionDataSource.close();
+		
+		summary_st = res.getQuantityString(R.plurals.numberOfObservations, nObservations,
+				nObservations);
+		summary_st += " ";
+		summary_st += res.getQuantityString(R.plurals.numberOfSessions, nSessions,
+				nSessions);
+		
+		((TextView) findViewById(R.id.lb_summary)).setText(summary_st);
 
+	}
 	/**
 	 * Launch editSession activity in creation mode
 	 * 
@@ -115,7 +142,7 @@ public class ListSessionsActivity extends Activity {
 
 		String message = "";
 		
-		dataSource.open();
+		sessionDataSource.open();
 
 		switch (requestCode) {
 		case ADD_SESSION_REQUEST:

@@ -7,6 +7,7 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -202,6 +203,12 @@ public class ObservationsDAO {
 		// Make sure to close the cursor
 		cursor.close();
 		return observations;
+	}
+
+	public int getAllObservationsNumber() {
+		int rows = (int) DatabaseUtils.queryNumEntries(database,
+				AstrologDBOpenHelper.DATABASE_OBSERVATIONS_TABLE);
+		return rows;
 	}
 
 	private Observation cursorToObservation(Cursor cursor) {

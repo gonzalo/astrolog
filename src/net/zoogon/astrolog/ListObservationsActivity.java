@@ -5,6 +5,7 @@ import java.util.List;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-
 public class ListObservationsActivity extends Activity {
 
 	private SessionsDAO sessionsDataSource;
@@ -24,13 +24,11 @@ public class ListObservationsActivity extends Activity {
 	private List<Observation> values;
 	private Session session;
 	private long session_id;
-	
-	//request codes for onActivityResult
-	public static final int ADD_OBSERVATION_REQUEST = 1;
-	public static final int EDIT_OBSERVATION_REQUEST = 2; 
-	public static final int EDIT_SESSION_REQUEST = 3;
 
-	
+	// request codes for onActivityResult
+	public static final int ADD_OBSERVATION_REQUEST = 1;
+	public static final int EDIT_OBSERVATION_REQUEST = 2;
+	public static final int EDIT_SESSION_REQUEST = 3;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +48,7 @@ public class ListObservationsActivity extends Activity {
 		updateObservationList();
 		// close data sources
 	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_list_observations, menu);
@@ -58,16 +57,16 @@ public class ListObservationsActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    // Handle item selection
-	    switch (item.getItemId()) {
-	        case R.id.remove_session:
-	            deleteSession();
-	            return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.remove_session:
+			deleteSession();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
-	
+
 	private void updateSession() {
 		sessionsDataSource.open();
 
@@ -85,38 +84,47 @@ public class ListObservationsActivity extends Activity {
 		sessionsDataSource.close();
 
 	}
-	
+
 	private void updateObservationList() {
 		observationsDataSource.open();
 
-	
 		// filling the viewList
 		ListView listView = (ListView) findViewById(R.id.vl_observations);
-	
+
 		values = observationsDataSource.getObservationsForSession(session_id);
-	
-		//TODO show message if there is no observations (invite to create some)
-		
+
+		// TODO show message if there is no observations (invite to create some)
+		updateSummary(values.size());
+
 		ArrayAdapter<Observation> adapter = new ArrayAdapter<Observation>(this,
 				android.R.layout.simple_list_item_1, values);
-		
+
 		listView.setAdapter(adapter);
-		
+
 		// add a event to each row
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
-				int position, long id) {
+					int position, long id) {
 				editObservation(values.get(position).getId());
 			}
-		}); 
-		
-		
-		// TODO fill stats counter
+		});
+
 		observationsDataSource.close();
 
-		
 	}
+
+	private void updateSummary(int size) {
+		String summary_st = "";
+
+		Resources res = getResources();
+		summary_st = res.getQuantityString(R.plurals.numberOfObjects, size,
+				size);
+
+		((TextView) findViewById(R.id.lb_summary)).setText(summary_st);
+
+	}
+
 	public void editSession(View view) {
 		Intent intent = new Intent(this, EditSessionActivity.class);
 		intent.putExtra("request_code",
@@ -138,7 +146,6 @@ public class ListObservationsActivity extends Activity {
 		startActivityForResult(intent, ADD_OBSERVATION_REQUEST);
 	}
 
-	
 	public void editObservation(long observation_id) {
 		Intent intent = new Intent(this, EditObservationActivity.class);
 		intent.putExtra("request_code",
@@ -161,7 +168,7 @@ public class ListObservationsActivity extends Activity {
 				break;
 
 			case Activity.RESULT_CANCELED:
-				//popUp(R.string.message_canceled);
+				// popUp(R.string.message_canceled);
 				break;
 			}
 			break;
@@ -173,7 +180,7 @@ public class ListObservationsActivity extends Activity {
 				break;
 
 			case Activity.RESULT_CANCELED:
-				//popUp(R.string.message_canceled);
+				// popUp(R.string.message_canceled);
 				break;
 			}
 			break;
@@ -182,8 +189,6 @@ public class ListObservationsActivity extends Activity {
 			break;
 		}
 	}
-
-	
 
 	private void deleteSession() {
 		observationsDataSource.open();
@@ -195,6 +200,7 @@ public class ListObservationsActivity extends Activity {
 		finish();
 
 	}
+
 	/**
 	 * Just a code snippet for toast To use in with resources class
 	 * (ex:R.string.message_done) or a String object
