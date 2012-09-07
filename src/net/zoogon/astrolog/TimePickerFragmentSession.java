@@ -1,7 +1,5 @@
 package net.zoogon.astrolog;
 
-import java.util.Calendar;
-
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;

@@ -1,13 +1,9 @@
 package net.zoogon.astrolog;
 
-import java.util.Calendar;
-
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
-import android.widget.DatePicker;
 
 public class DatePickerFragmentSession extends DialogFragment{
 
