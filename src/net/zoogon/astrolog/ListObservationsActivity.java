@@ -59,6 +59,13 @@ public class ListObservationsActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
+
+		case R.id.add_observation:
+			addObservation();
+			return true;
+		case R.id.edit_session:
+			editSession();
+			return true;
 		case R.id.remove_session:
 			deleteSession();
 			return true;
@@ -125,7 +132,7 @@ public class ListObservationsActivity extends Activity {
 
 	}
 
-	public void editSession(View view) {
+	public void editSession() {
 		Intent intent = new Intent(this, EditSessionActivity.class);
 		intent.putExtra("request_code",
 				EditSessionActivity.EDIT_SESSION_REQUEST);
@@ -139,6 +146,13 @@ public class ListObservationsActivity extends Activity {
 	 * @param view
 	 */
 	public void addObservation(View view) {
+		Intent intent = new Intent(this, EditObservationActivity.class);
+		intent.putExtra("session_id", session_id);
+		intent.putExtra("request_code",
+				EditObservationActivity.ADD_OBSERVATION_REQUEST);
+		startActivityForResult(intent, ADD_OBSERVATION_REQUEST);
+	}
+	public void addObservation() {
 		Intent intent = new Intent(this, EditObservationActivity.class);
 		intent.putExtra("session_id", session_id);
 		intent.putExtra("request_code",

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -33,7 +34,7 @@ public class ListSessionsActivity extends Activity {
 		Log.w(ACTIVITY_SERVICE, "ListSessionsActivity starting");
 				
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_list_sessions);
 		
 		// updateSessionList();
 		sessionDataSource = new SessionsDAO(this);
@@ -45,10 +46,21 @@ public class ListSessionsActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_main, menu);
+		getMenuInflater().inflate(R.menu.activity_list_sessions, menu);
 		return true;
 	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
 
+		case R.id.add_session:
+			addSession();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -122,7 +134,11 @@ public class ListSessionsActivity extends Activity {
 		intent.putExtra("request_code", EditSessionActivity.ADD_SESSION_REQUEST);
 		startActivityForResult(intent, ADD_SESSION_REQUEST);
 	}
-
+	public void addSession() {
+		Intent intent = new Intent(this, EditSessionActivity.class);
+		intent.putExtra("request_code", EditSessionActivity.ADD_SESSION_REQUEST);
+		startActivityForResult(intent, ADD_SESSION_REQUEST);
+	}
 	
 	/**
 	 * Launch ListObservations activity 

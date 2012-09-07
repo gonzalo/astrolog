@@ -101,12 +101,6 @@ public class EditSessionActivity extends FragmentActivity implements
 
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_edit_session, menu);
-		return true;
-	}
-
 	public void showDatePickerDialog(View v) {
 		DialogFragment newFragment = new DatePickerFragmentSession();
 

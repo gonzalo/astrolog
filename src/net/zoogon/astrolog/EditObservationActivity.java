@@ -65,7 +65,7 @@ public class EditObservationActivity extends FragmentActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_list_observations, menu);
+		getMenuInflater().inflate(R.menu.activity_edit_observation, menu);
 		return true;
 	}
 

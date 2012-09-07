@@ -38,7 +38,8 @@
     <string name="title_activity_list_observations">Session details</string>
 
     <!-- ListObservations -->
-    <string name="add_observation">Add observation</string>
+    <string name="add_observation">Add observation</string> 
+    <string name="edit_session">Edit Session</string>
     <string name="remove_session">Remove session</string>
 
     <!-- EditObservations -->

@@ -1,7 +1,22 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/remove_session"
-        android:title="@string/remove_session"
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/add_observation"
+        android:icon="@drawable/ic_add"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/add_observation"/>
+    <item
+        android:id="@+id/edit_session"
+        android:icon="@drawable/ic_edit"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/edit_session"/>
+    <item
+        android:id="@+id/remove_session"
         android:icon="@drawable/ic_remove"
         android:orderInCategory="100"
-        android:showAsAction="never" />
+        android:showAsAction="never"
+        android:title="@string/remove_session"/>
+
 </menu>
