@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -61,13 +63,30 @@ public class EditObservationActivity extends FragmentActivity implements
 
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_list_observations, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.remove_observation:
+	            deleteObservation();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
 	private void setDefaultValues() {
 		date = new Date();
-	
+
 		updateDateLabel(date);
 	}
-	
-	private void updateDateLabel(Date date){
+
+	private void updateDateLabel(Date date) {
 
 		String local_time_st = SimpleDateFormat.getDateInstance(
 				SimpleDateFormat.SHORT).format(date)
@@ -75,7 +94,7 @@ public class EditObservationActivity extends FragmentActivity implements
 				+ SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT)
 						.format(date);
 		((TextView) findViewById(R.id.lb_local_date_time))
-		.setText(local_time_st);
+				.setText(local_time_st);
 	}
 
 	/**
@@ -167,7 +186,6 @@ public class EditObservationActivity extends FragmentActivity implements
 
 		updateDateLabel(date);
 
-
 	}
 
 	/**
@@ -249,7 +267,16 @@ public class EditObservationActivity extends FragmentActivity implements
 		}
 	}
 
+	private void deleteObservation() {
+		dataSource.open();
+		dataSource.deleteObservation(observation_id);
+		dataSource.close();
+		endActivityOK(observation_id);
+
+	}
+
 	private void endActivityOK(long observation_id) {
+		dataSource.close();
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra("observation_id", observation_id);
 		setResult(Activity.RESULT_OK, resultIntent);

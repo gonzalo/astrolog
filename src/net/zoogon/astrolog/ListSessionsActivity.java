@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-//TODO delete sessions
 
 public class ListSessionsActivity extends Activity {
 

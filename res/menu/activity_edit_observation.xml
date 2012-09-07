@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/remove_session"
-        android:title="@string/remove_session"
+    <item android:id="@+id/remove_observation"
+        android:title="@string/remove_observation"
         android:icon="@drawable/ic_remove"
         android:orderInCategory="100"
         android:showAsAction="never" />

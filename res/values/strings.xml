@@ -31,6 +31,7 @@
     
     <!-- ListObservations -->
 	<string name="add_observation">Add observation</string>
+	<string name="remove_session">Remove session</string>
 
 	<!-- EditObservations -->
 	<string name="title_activity_edit_observations">EditObservations</string>
@@ -46,4 +47,5 @@
 	<string name="seeing">Seeing</string>
 	<string name="rate">Rate object</string>   
 	<string name="date_time_test_st">xx/xx/xxxx - xx:xx</string>
+	<string name="remove_observation">Remove observation</string>
 </resources>

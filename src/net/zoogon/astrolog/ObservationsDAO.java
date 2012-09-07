@@ -100,11 +100,19 @@ public class ObservationsDAO {
 		return n_rows;
 	}
 
-	public void deleteObservation(Observation observation) {
-		long id = observation.getId();
-		Log.w("ObservationDAO", "Observation deleted with id: " + id);
-		database.delete(AstrologDBOpenHelper.DATABASE_OBSERVATIONS_TABLE,
+	/**
+	 * deletes the associated row in OBSERVATIONS table
+	 * 
+	 * @param id
+	 *            id of the observation row
+	 * @return number of row affected
+	 */
+	public int deleteObservation(long id) {
+		int rows = database.delete(
+				AstrologDBOpenHelper.DATABASE_OBSERVATIONS_TABLE,
 				AstrologDBOpenHelper.OBSERVATION_ID + " = " + id, null);
+		Log.w("ObservationDAO", "Observation deleted with id: " + id);
+		return rows;
 	}
 
 	public Observation getObservation(long id) {
@@ -161,6 +169,12 @@ public class ObservationsDAO {
 		return observations;
 	}
 
+	/**
+	 * Retrieves the observations associated to that session_id
+	 * 
+	 * @param session_id
+	 * @return List<Observation>
+	 */
 	public List<Observation> getObservationsForSession(long session_id) {
 		List<Observation> observations = new ArrayList<Observation>();
 
@@ -228,4 +242,22 @@ public class ObservationsDAO {
 		return observation;
 	}
 
+	/**
+	 * deletes the associated row for the specified session_id
+	 * 
+	 * @param session_id
+	 *            id of the session
+	 * @return number of rows affected
+	 */
+	public int deleteAllObservationForSession(long session_id) {
+
+		String where = AstrologDBOpenHelper.OBSERVATION_SESSION_ID + "="
+				+ session_id;
+		String whereArgs[] = null;
+		int rows = database.delete(
+				AstrologDBOpenHelper.DATABASE_OBSERVATIONS_TABLE, where,
+				whereArgs);
+
+		return rows;
+	}
 }

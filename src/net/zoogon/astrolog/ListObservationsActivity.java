@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-//TODO delete observations
 
 public class ListObservationsActivity extends Activity {
 
@@ -49,7 +50,23 @@ public class ListObservationsActivity extends Activity {
 		updateObservationList();
 		// close data sources
 	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_list_observations, menu);
+		return true;
+	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.remove_session:
+	            deleteSession();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
 	
 	private void updateSession() {
 		sessionsDataSource.open();
@@ -166,6 +183,18 @@ public class ListObservationsActivity extends Activity {
 		}
 	}
 
+	
+
+	private void deleteSession() {
+		observationsDataSource.open();
+		observationsDataSource.deleteAllObservationForSession(session_id);
+		observationsDataSource.close();
+		sessionsDataSource.open();
+		sessionsDataSource.deleteSession(session_id);
+		sessionsDataSource.close();
+		finish();
+
+	}
 	/**
 	 * Just a code snippet for toast To use in with resources class
 	 * (ex:R.string.message_done) or a String object
@@ -176,6 +205,7 @@ public class ListObservationsActivity extends Activity {
 		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 	}
 
+	@SuppressWarnings("unused")
 	private void popUp(CharSequence message) {
 		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 	}
