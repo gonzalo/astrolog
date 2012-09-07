@@ -94,6 +94,8 @@ public class ListObservationsActivity extends Activity {
 
 	}
 
+	//TODO create a cleaner list more information by node
+	//TODO revise layout to adjust viewlist to free space
 	private void updateObservationList() {
 		observationsDataSource.open();
 
