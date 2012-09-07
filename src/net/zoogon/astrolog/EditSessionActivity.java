@@ -6,6 +6,7 @@ import java.util.Date;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -14,8 +15,11 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TimePicker;
 
-public class EditSessionActivity extends FragmentActivity implements OnDateSetListener {
+public class EditSessionActivity extends FragmentActivity implements
+		OnDateSetListener, OnTimeSetListener {
 
 	public static final int ADD_SESSION_REQUEST = 1;
 	public static final int EDIT_SESSION_REQUEST = 0;
@@ -38,25 +42,32 @@ public class EditSessionActivity extends FragmentActivity implements OnDateSetLi
 
 		dataSource = new SessionsDAO(this);
 
-	
 		// check if main activity wants to create a new session
 		// or edit an existing one
 		request_code = getIntent().getExtras().getInt("request_code");
-		
 
-		if (request_code == EDIT_SESSION_REQUEST){
+		if (request_code == EDIT_SESSION_REQUEST) {
 			session_id = getIntent().getExtras().getLong("session_id");
-			loadSession(session_id);			
-		}			
-		else
+			loadSession(session_id);
+		} else
 			setDefaultValues();
 	}
 
 	private void setDefaultValues() {
 		date = new Date();
-		String date_st = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(date); 
-		((EditText) findViewById(R.id.tf_date)).setText(date_st);
-		
+		updateDateLabel(date);
+
+	}
+
+	private void updateDateLabel(Date date) {
+
+		String local_time_st = SimpleDateFormat.getDateInstance(
+				SimpleDateFormat.SHORT).format(date)
+				+ " - "
+				+ SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT)
+						.format(date);
+		((TextView) findViewById(R.id.lb_date))
+				.setText(local_time_st);
 	}
 
 	/**
@@ -80,16 +91,12 @@ public class EditSessionActivity extends FragmentActivity implements OnDateSetLi
 					.getLocation());
 			((EditText) findViewById(R.id.tf_notes))
 					.setText(session.getNotes());
-			
+
 			date = session.getDate();
-			String date_st = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(date);
-			
-			
-			((EditText) findViewById(R.id.tf_date)).setText(date_st);
-			
+			updateDateLabel(date);
 
 		}
-		
+
 		dataSource.close();
 
 	}
@@ -102,27 +109,50 @@ public class EditSessionActivity extends FragmentActivity implements OnDateSetLi
 
 	public void showDatePickerDialog(View v) {
 		DialogFragment newFragment = new DatePickerFragmentSession();
-		
+
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		Bundle args = new Bundle();
-        args.putInt("year", cal.get(Calendar.YEAR));
-        args.putInt("month", cal.get(Calendar.MONTH));
-        args.putInt("day", cal.get(Calendar.DAY_OF_MONTH));
-        newFragment.setArguments(args);
+		args.putInt("year", cal.get(Calendar.YEAR));
+		args.putInt("month", cal.get(Calendar.MONTH));
+		args.putInt("day", cal.get(Calendar.DAY_OF_MONTH));
+		newFragment.setArguments(args);
 		newFragment.show(getSupportFragmentManager(), "datePicker");
 	}
 
-	
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int day) {
-        //update date and tf_date
-    	Calendar cal = Calendar.getInstance();
-    	cal.set(year, month, day);
-    	date = cal.getTime();
-		String date_st = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(date); 
-        ((EditText) findViewById(R.id.tf_date)).setText(date_st);
-    }
+	@Override
+	public void onDateSet(DatePicker view, int year, int month, int day) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(year, month, day, cal.get(Calendar.HOUR_OF_DAY),
+				cal.get(Calendar.MINUTE));
+		date = cal.getTime();
+		updateDateLabel(date);
+	}
+
+	public void showTimePickerDialog(View v) {
+		DialogFragment newFragment = new TimePickerFragmentSession();
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		Bundle args = new Bundle();
+		args.putInt("hourOfDay", cal.get(Calendar.HOUR_OF_DAY));
+		args.putInt("minute", cal.get(Calendar.MINUTE));
+		newFragment.setArguments(args);
+		newFragment.show(getSupportFragmentManager(), "timePicker");
+	}
+
+	@Override
+	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+				cal.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
+		date = cal.getTime();
+
+		updateDateLabel(date);
+
+	}
 
 	/**
 	 * Checks if input files are valid to be inserted in DB
@@ -156,15 +186,7 @@ public class EditSessionActivity extends FragmentActivity implements OnDateSetLi
 			tf_to_validate.setError(null);
 		}
 
-		// Date is valid date
-		tf_to_validate = (EditText) findViewById(R.id.tf_date);
-		
-		try {
-			date = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).parse(tf_to_validate.getText().toString());
-		}
-		catch (Exception e) {
-		  flag = false;
-		}
+		// the rest of fields are optional
 
 		return flag;
 	}
@@ -181,20 +203,21 @@ public class EditSessionActivity extends FragmentActivity implements OnDateSetLi
 			notes = ((EditText) findViewById(R.id.tf_notes)).getText()
 					.toString();
 
-			//date is set on validation method
+			// date is set on validation method
 
 			dataSource.open();
 
 			if (request_code == ADD_SESSION_REQUEST) {
 
-				Log.w("EditSessionActivity", "Inserting new record on SESSIONS table");
+				Log.w("EditSessionActivity",
+						"Inserting new record on SESSIONS table");
 
 				Session session = dataSource.createSession(title, date,
 						location, notes);
-				session_id= session.getId();
+				session_id = session.getId();
 
-				Log.w("EditSessionActivity",
-						"Inserted session. New index = " + session_id);
+				Log.w("EditSessionActivity", "Inserted session. New index = "
+						+ session_id);
 
 			} else {
 
