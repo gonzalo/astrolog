@@ -22,6 +22,7 @@ public class ListSessionsActivity extends Activity {
 	private ObservationsDAO observationDataSource;
 
 	private List<Session> values;
+	private ArrayAdapter<Session> adapter;
 
 	// request codes for onActivityResult
 	public static final int ADD_SESSION_REQUEST = 1;
@@ -83,9 +84,13 @@ public class ListSessionsActivity extends Activity {
 		values = sessionDataSource.getAllSessions();
 		// TODO show message if there is no sessions (invite to create some)
 
-		ArrayAdapter<Session> adapter = new ArrayAdapter<Session>(this,
-				android.R.layout.simple_list_item_1, values);
+		// Create the array adapter
+		//ArrayAdapter<Session> adapter = new ArrayAdapter<Session>(this,
+		//		android.R.layout.simple_list_item_1, values);
+		adapter = new ArrayAdapter<Session>(this,
+				R.layout.observation_item, values);
 
+		
 		listView.setAdapter(adapter);
 
 		// add a event to each row
@@ -93,6 +98,7 @@ public class ListSessionsActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				//TODO extract id from adapter or listView not external list
 				listObservations(values.get(position).getId());
 			}
 		});
