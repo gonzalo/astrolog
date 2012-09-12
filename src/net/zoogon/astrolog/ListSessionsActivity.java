@@ -22,7 +22,7 @@ public class ListSessionsActivity extends Activity {
 	private ObservationsDAO observationDataSource;
 
 	private List<Session> values;
-	private ArrayAdapter<Session> adapter;
+	private SessionsArrayAdapter adapter;
 
 	// request codes for onActivityResult
 	public static final int ADD_SESSION_REQUEST = 1;
@@ -87,8 +87,8 @@ public class ListSessionsActivity extends Activity {
 		// Create the array adapter
 		//ArrayAdapter<Session> adapter = new ArrayAdapter<Session>(this,
 		//		android.R.layout.simple_list_item_1, values);
-		adapter = new ArrayAdapter<Session>(this,
-				R.layout.observation_item, values);
+		adapter = new SessionsArrayAdapter(this,
+				R.layout.session_row, values);
 
 		
 		listView.setAdapter(adapter);
