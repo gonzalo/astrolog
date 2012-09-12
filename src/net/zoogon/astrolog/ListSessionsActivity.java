@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,8 +83,6 @@ public class ListSessionsActivity extends Activity {
 		// TODO show message if there is no sessions (invite to create some)
 
 		// Create the array adapter
-		//ArrayAdapter<Session> adapter = new ArrayAdapter<Session>(this,
-		//		android.R.layout.simple_list_item_1, values);
 		adapter = new SessionsArrayAdapter(this,
 				R.layout.session_row, values);
 
@@ -98,7 +95,7 @@ public class ListSessionsActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				//TODO extract id from adapter or listView not external list
-				listObservations(values.get(position).getId());
+				listObservations(adapter.getItem(position).getId());
 			}
 		});
 
@@ -122,7 +119,6 @@ public class ListSessionsActivity extends Activity {
 
 		summary_st = res.getQuantityString(R.plurals.numberOfObservations,
 				nObservations, nObservations);
-		summary_st += " ";
 		summary_st += res.getQuantityString(R.plurals.numberOfSessions,
 				nSessions, nSessions);
 

@@ -23,7 +23,10 @@ public class ListObservationsActivity extends Activity {
 
 	private SessionsDAO sessionsDataSource;
 	private ObservationsDAO observationsDataSource;
+
 	private List<Observation> values;
+	private ObservationsArrayAdapter adapter;
+
 	private Session session;
 	private long session_id;
 
@@ -94,7 +97,7 @@ public class ListObservationsActivity extends Activity {
 
 	}
 
-	//TODO create a cleaner list more information by node
+
 	private void updateObservationList() {  
 		observationsDataSource.open();
 
@@ -106,8 +109,8 @@ public class ListObservationsActivity extends Activity {
 		// TODO show message if there is no observations (invite to create some)
 		updateSummary(values.size());
 
-		ArrayAdapter<Observation> adapter = new ArrayAdapter<Observation>(this,
-				android.R.layout.simple_list_item_1, values);
+		adapter = new ObservationsArrayAdapter(this,
+				R.layout.observation_row, values);
 
 		listView.setAdapter(adapter);
 
@@ -116,7 +119,7 @@ public class ListObservationsActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				editObservation(values.get(position).getId());
+				editObservation(adapter.getItem(position).getId());
 			}
 		});
 

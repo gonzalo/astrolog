@@ -27,7 +27,6 @@ public class SessionsArrayAdapter extends ArrayAdapter<Session> {
 		LinearLayout newView;
 
 		Session session = getItem(position);
-		long id = session.getId();
 		Date date = session.getDate();
 		String location = session.getLocation();
 		String title = session.getTitle();
@@ -54,7 +53,7 @@ public class SessionsArrayAdapter extends ArrayAdapter<Session> {
 				.findViewById(R.id.session_notes);
 
 		String date_st = SimpleDateFormat.getDateInstance(
-				SimpleDateFormat.SHORT).format(session.getDate());
+				SimpleDateFormat.SHORT).format(date);
 		dateView.setText(date_st);
 		locationView.setText(location);
 		if (title.length() != 0) {
