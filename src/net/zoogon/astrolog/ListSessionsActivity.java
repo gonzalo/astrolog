@@ -95,7 +95,6 @@ public class ListSessionsActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				//TODO extract id from adapter or listView not external list
 				listObservations(adapter.getItem(position).getId());
 			}
 		});
