@@ -4,7 +4,7 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk
+    <uses-sdk 
         android:minSdkVersion="10"
         android:targetSdkVersion="10" />
 
@@ -25,7 +25,15 @@
             android:name=".EditSessionActivity"
             android:label="@string/title_activity_edit_session" >
         </activity>
-
+        <activity
+            android:name=".ListObservationsActivity"
+            android:label="@string/title_activity_list_observations" >
+        </activity>
+                <activity
+            android:name=".EditObservationActivity"
+            android:label="@string/title_activity_edit_observations" >
+        </activity>
+        
     </application>
 
 </manifest>

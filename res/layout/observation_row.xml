@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_small" >
+
+    <TextView
+        android:id="@+id/observation_object_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/observation_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_large"
+            android:adjustViewBounds="true"
+            android:contentDescription="Seeing"
+            android:maxWidth="@dimen/text_icon_medium"
+            android:src="@drawable/ic_seeing" />
+
+        <TextView
+            android:id="@+id/observation_seeing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_small" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_large"
+            android:adjustViewBounds="true"
+            android:contentDescription="Rate"
+            android:maxWidth="@dimen/text_icon_medium"
+            android:src="@drawable/ic_rating" />
+
+        <TextView
+            android:id="@+id/observation_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_small" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/observation_notes"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:layout_marginTop="@dimen/padding_small"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" 
+        android:layout_marginTop="@dimen/padding_small">
+
+        <TextView
+            android:id="@+id/observation_equipment_lb"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            
+            android:text="Equipment:" />
+
+        <TextView
+            android:id="@+id/observation_telescope"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_small" />
+
+        <TextView
+            android:id="@+id/observation_eyepiece"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_small" />
+
+        <TextView
+            android:id="@+id/observation_barlow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_small" />
+    </LinearLayout>
+
+</LinearLayout>

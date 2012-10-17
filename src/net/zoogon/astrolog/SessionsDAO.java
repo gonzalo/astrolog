@@ -7,6 +7,7 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -60,9 +61,29 @@ public class SessionsDAO {
 		return newSession;
 	}
 
+	public int updateSession(long session_id, String title, Date date,
+			String location, String notes) {
+		ContentValues newValues = new ContentValues();
+
+		String st_date = AstrologDBOpenHelper.formatDateToString(date);
+
+		// preparing row to be inserted
+		newValues.put(AstrologDBOpenHelper.SESSION_TITLE, title);
+		newValues.put(AstrologDBOpenHelper.SESSION_DATE, st_date);
+		newValues.put(AstrologDBOpenHelper.SESSION_LOCATION, location);
+		newValues.put(AstrologDBOpenHelper.SESSION_NOTES, notes);
+
+		String where = AstrologDBOpenHelper.SESSION_ID + "=" + session_id;
+
+		int n_rows = database.update(
+				AstrologDBOpenHelper.DATABASE_SESSIONS_TABLE, newValues, where,
+				null);
+		return n_rows;
+	}
+
 	public void deleteSession(Session session) {
 		long id = session.getId();
-		Log.w("SessionDAO", "Comment deleted with id: " + id);
+		Log.w("SessionDAO", "Session deleted with id: " + id);
 		database.delete(AstrologDBOpenHelper.DATABASE_SESSIONS_TABLE,
 				AstrologDBOpenHelper.SESSION_ID + " = " + id, null);
 	}
@@ -80,8 +101,9 @@ public class SessionsDAO {
 		String having = null;
 		String order = AstrologDBOpenHelper.SESSION_DATE + " DESC";
 
-		Cursor cursor = database.query(AstrologDBOpenHelper.DATABASE_SESSIONS_TABLE,
-				result_columns, where, whereArgs, groupBy, having, order);
+		Cursor cursor = database.query(
+				AstrologDBOpenHelper.DATABASE_SESSIONS_TABLE, result_columns,
+				where, whereArgs, groupBy, having, order);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
@@ -94,7 +116,12 @@ public class SessionsDAO {
 		return sessions;
 	}
 	
-	public Session getSession(long id){
+	public int getAllSessionNumber() {
+		int rows = (int) DatabaseUtils.queryNumEntries(database,
+				AstrologDBOpenHelper.DATABASE_SESSIONS_TABLE);
+		return rows;
+	}
+	public Session getSession(long id) {
 		Session session = new Session();
 
 		// configuring query
@@ -107,21 +134,22 @@ public class SessionsDAO {
 		String having = null;
 		String order = null;
 
-		Cursor cursor = database.query(AstrologDBOpenHelper.DATABASE_SESSIONS_TABLE,
-				result_columns, where, whereArgs, groupBy, having, order);
+		Cursor cursor = database.query(
+				AstrologDBOpenHelper.DATABASE_SESSIONS_TABLE, result_columns,
+				where, whereArgs, groupBy, having, order);
 
 		cursor.moveToFirst();
 		if (!cursor.isAfterLast()) {
-			session = cursorToSession(cursor);			
+			session = cursorToSession(cursor);
 		}
 		// Make sure to close the cursor
 		cursor.close();
-		return session;		
+		return session;
 	}
 
 	private Session cursorToSession(Cursor cursor) {
 		Session session = new Session();
-		
+
 		int indexId = cursor
 				.getColumnIndexOrThrow(AstrologDBOpenHelper.SESSION_ID);
 		int indexTitle = cursor
@@ -132,13 +160,31 @@ public class SessionsDAO {
 				.getColumnIndexOrThrow(AstrologDBOpenHelper.SESSION_LOCATION);
 		int indexNotes = cursor
 				.getColumnIndexOrThrow(AstrologDBOpenHelper.SESSION_NOTES);
-		
+
 		session.setId(cursor.getLong(indexId));
 		session.setTitle(cursor.getString(indexTitle));
-		session.setDate(AstrologDBOpenHelper.formatStringToDate(cursor.getString(indexDate)));
+		session.setDate(AstrologDBOpenHelper.formatStringToDate(cursor
+				.getString(indexDate)));
 		session.setLocation(cursor.getString(indexLocation));
 		session.setNotes(cursor.getString(indexNotes));
 		return session;
 	}
 
+	/**
+	 * deletes the associated row in SESSIONS table and all related rows in
+	 * OBSERVATIONS table
+	 * 
+	 * @param id id of the session
+	 * @return number of sessions affected
+	 */
+	public int deleteSession(long id) {
+
+		String where = AstrologDBOpenHelper.SESSION_ID + "=" + id;
+		String whereArgs[] = null;
+		int rows = database.delete(
+				AstrologDBOpenHelper.DATABASE_SESSIONS_TABLE, where,
+				whereArgs);
+
+		return rows;
+	}
 }

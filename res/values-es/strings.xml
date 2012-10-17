@@ -1,21 +1,74 @@
 <resources>
 
     <string name="app_name">AstroLog</string>
-    <string name="app_description">Astronomy logging tool to register your observing sessions.</string>
-    <string name="title_activity_main">Astrolog - Sessions list</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_description">Bitácora astronómica para registrar tus sesiones de observación.</string>
 
+    <!-- Main -->
+    <string name="title_activity_main">Astrolog - Sessions list</string>
+    <string name="message_done">¡Listo!</string>
+    <string name="message_canceled">Cancelado</string>
+    <string name="message_unknow_requestCode">requestCode desconocido. Inténtelo de nuevo.</string>
+    
     <!-- String space for menu -->
-    <string name="menu_settings">Settings</string>
+    <string name="menu_settings">Configuración</string>
     <string name="add_session">Nueva sesión</string>
 
     <!-- String space for main activity -->
-    <string name="summary_example">3 sesiones y 20 objetos</string>
+    <string name="summary_example">3 ses. y 20 obj.</string>
     <string name="title_activity_edit_session">Detalles de la sesión</string>
     <string name="title">Título</string>
     <string name="date">Fecha</string>
     <string name="location">Localización</string>
     <string name="notes">Notas</string>
     <string name="save">Guardar</string>
+    <string name="title_activity_list_sessions">Sesiones guardadas</string>
+    <plurals name="numberOfObservations">
+        <item quantity="one">%d objeto</item>
+        <item quantity="other">%d objetos</item>
+    </plurals>
+    <plurals name="numberOfSessions">
+        <item quantity="one">&#160;en %d sesión.</item>
+        <item quantity="other">&#160;en %d sesiones.</item>
+    </plurals>
+    <string name="at">&#160;at&#160;</string>
+
+    
+    <!-- EditSession -->
+    <string name="error_title_length_0">Indique un título</string>
+    <string name="error_location_length_0">Indique una localización.</string>
+    <string name="pick_date">Fecha</string>
+    <string name="title_activity_list_observations">Detalles de la sesión</string>
+
+    <!-- ListObservations -->
+    <string name="add_observation">Nueva observación</string> 
+    <string name="edit_session">Edita la sesión</string>
+    <string name="remove_session">Elimina la sesión</string>
+    <string name="confirm_delete">Confirma el borrado</string>
+    <string name="delete_session_warning">¿Está seguro que desea borrar esta sesión? <br/>(Perderá todas las observaciones)</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    
+
+    <!-- EditObservations -->
+    <string name="title_activity_edit_observations">Detalles de la observación</string>
+    <string name="date_time">Fecha/Hora</string>
+    <string name="local">Lugar: </string>
+    <string name="ut">UT: </string>
+    <string name="pick_time">Hora</string>
+    <string name="object_id">Nombre objeto/ID</string>
+    <string name="object_id_hint">NGC457 o M27</string>
+    <string name="telescope">Telescopio</string>
+    <string name="eyepiece">Ocular</string>
+    <string name="barlow">Barlow</string>
+    <string name="seeing">Seeing</string>
+    <string name="rate">Valoración objeto:</string>
+    <string name="date_time_test_st">xx/xx/xxxx - xx:xx</string>
+    <string name="remove_observation">Elimina la observación</string>
+    <string name="error_name_required">Introduzca un nombre de objeto o id</string>
+
+    <plurals name="numberOfObjects">
+        <item quantity="one">%d objeto observado</item>
+        <item quantity="other">%d objetos observados</item>
+    </plurals>
     
 </resources>

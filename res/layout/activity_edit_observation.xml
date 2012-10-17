@@ -10,23 +10,24 @@
         android:layout_height="wrap_content"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:orientation="vertical"
+        android:orientation="vertical"	
         android:padding="@dimen/padding_small" >
 
         <TextView
-            android:id="@+id/lb_date_st"
+            android:id="@+id/lb_date_time_st"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/date"
+            android:text="@string/date_time"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_small"
             android:orientation="horizontal" >
 
             <TextView
-                android:id="@+id/lb_date"
+                android:id="@+id/lb_local_date_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
@@ -36,7 +37,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.3"
+                android:layout_weight="0.2"
                 android:onClick="showDatePickerDialog"
                 android:text="@string/pick_date" />
 
@@ -49,34 +50,90 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/lb_title"
+            android:id="@+id/lb_object_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title"
+            android:text="@string/object_id"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
-            android:id="@+id/tf_title"
+            android:id="@+id/tf_object_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/title"
+            android:hint="@string/object_id_hint"
             android:inputType="text" />
 
         <TextView
-            android:id="@+id/lb_location"
+            android:id="@+id/lb_telescope"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/location"
+            android:text="@string/telescope"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
-            android:id="@+id/tf_location"
+            android:id="@+id/tf_telescope"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/location"
+            android:hint="@string/telescope"
             android:inputType="text" />
+
+        <TextView
+            android:id="@+id/lb_eyepiece"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/eyepiece"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/tf_eyepiece"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/eyepiece"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/lb_barlow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/barlow"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/tf_barlow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/barlow"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/lb_seeing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seeing"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <RatingBar
+            android:id="@+id/rb_seeing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5" />
+
+        <TextView
+            android:id="@+id/lb_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rate"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <RatingBar
+            android:id="@+id/rb_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5" />
 
         <TextView
             android:id="@+id/lb_notes"
@@ -87,7 +144,7 @@
 
         <EditText
             android:id="@+id/tf_notes"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/notes"
@@ -97,7 +154,7 @@
             android:id="@+id/bt_save"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:onClick="saveSession"
+            android:onClick="saveObservation"
             android:text="@string/save" />
     </LinearLayout>
 

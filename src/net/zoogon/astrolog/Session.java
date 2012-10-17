@@ -51,7 +51,8 @@ public class Session {
 	}
 
 	public String toString() {
-		return this.title;
+		String date_st = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(date); 
+		return date_st + " - " + this.title;
 	}
 
 }

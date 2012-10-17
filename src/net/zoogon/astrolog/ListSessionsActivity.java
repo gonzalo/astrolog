@@ -4,105 +4,156 @@ import java.util.List;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class ListSessionsActivity extends Activity {
 
-	//AstrologDBOpenHelper astrologDBOpenHelper;
-	//SQLiteDatabase db;
-	private SessionsDAO dataSource;
+	private SessionsDAO sessionDataSource;
+	private ObservationsDAO observationDataSource;
+
 	private List<Session> values;
+	private SessionsArrayAdapter adapter;
+
+	// request codes for onActivityResult
+	public static final int ADD_SESSION_REQUEST = 1;
+	public static final int EDIT_SESSION_REQUEST = 2;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
-		Log.w(ACTIVITY_SERVICE, "MainActivity starting");
-				
+
+		Log.w(ACTIVITY_SERVICE, "ListSessionsActivity starting");
+
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		
+		setContentView(R.layout.activity_list_sessions);
+
 		// updateSessionList();
-		dataSource = new SessionsDAO(this);
-		dataSource.open();
+		sessionDataSource = new SessionsDAO(this);
+		observationDataSource = new ObservationsDAO(this);
 
 		updateSessionList();
-		
-	}
 
-	private void updateSessionList() {
-
-
-		// filling the viewList
-		ListView listView = (ListView) findViewById(R.id.vl_sessions);
-
-		values = dataSource.getAllSessions();
-
-		//TODO show message if there is no sessions (invite to create some)
-		
-		ArrayAdapter<Session> adapter = new ArrayAdapter<Session>(this,
-				android.R.layout.simple_list_item_1, values);
-		
-		listView.setAdapter(adapter);
-		
-		// add a event to each row
-		listView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-				int position, long id) {
-				editSession(values.get(position).getId());
-			}
-		}); 
-		
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_main, menu);
+		getMenuInflater().inflate(R.menu.activity_list_sessions, menu);
 		return true;
 	}
 
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+
+		case R.id.add_session:
+			addSession();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
 	protected void onResume() {
-		dataSource.open();
 		super.onResume();
 	}
 
 	@Override
 	protected void onPause() {
-		dataSource.close();
 		super.onPause();
-	}	
-	
+	}
+
+	private void updateSessionList() {
+
+		sessionDataSource.open();
+
+		// filling the viewList
+		ListView listView = (ListView) findViewById(R.id.vl_sessions);
+
+		values = sessionDataSource.getAllSessions();
+		// TODO show message if there is no sessions (invite to create some)
+
+		// Create the array adapter
+
+		adapter = new SessionsArrayAdapter(this,
+				R.layout.session_row, values);
+
+		
+		listView.setAdapter(adapter);
+
+		// add a event to each row
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				listObservations(adapter.getItem(position).getId());
+			}
+		});
+
+		sessionDataSource.close();
+
+		updateSummary();
+	}
+
+	private void updateSummary() {
+		String summary_st = "";
+		int nSessions, nObservations;
+		Resources res = getResources();
+
+		observationDataSource.open();
+		nObservations = observationDataSource.getAllObservationsNumber();
+		observationDataSource.close();
+
+		sessionDataSource.open();
+		nSessions = sessionDataSource.getAllSessionNumber();
+		sessionDataSource.close();
+
+		summary_st = res.getQuantityString(R.plurals.numberOfObservations,
+				nObservations, nObservations);
+		summary_st += res.getQuantityString(R.plurals.numberOfSessions,
+				nSessions, nSessions);
+
+		((TextView) findViewById(R.id.lb_summary)).setText(summary_st);
+
+	}
+
 	/**
 	 * Launch editSession activity in creation mode
 	 * 
 	 * @param view
 	 */
 	public void addSession(View view) {
-		dataSource.close();
 		Intent intent = new Intent(this, EditSessionActivity.class);
-		intent.putExtra("session_id", EditSessionActivity.CREATE_SESSION);
-		startActivityForResult(intent, EditSessionActivity.ADD_SESSION_REQUEST);
+		intent.putExtra("request_code", EditSessionActivity.ADD_SESSION_REQUEST);
+		startActivityForResult(intent, ADD_SESSION_REQUEST);
 	}
-	
+
+	public void addSession() {
+		Intent intent = new Intent(this, EditSessionActivity.class);
+		intent.putExtra("request_code", EditSessionActivity.ADD_SESSION_REQUEST);
+		startActivityForResult(intent, ADD_SESSION_REQUEST);
+	}
+
 	/**
-	 * Launch editSession activity to edit some session
+	 * Launch ListObservations activity
 	 * 
-	 * @param view
+	 * @param session_id
 	 */
-	public void editSession(long session_id) {
-		Intent intent = new Intent(this, EditSessionActivity.class);
+	public void listObservations(long session_id) {
+		Intent intent = new Intent(this, ListObservationsActivity.class);
 		intent.putExtra("session_id", session_id);
-		startActivityForResult(intent, EditSessionActivity.EDIT_SESSION_REQUEST);
+		startActivityForResult(intent, EDIT_SESSION_REQUEST);
 	}
-	
+
 	/**
 	 * Launched after activity called with startActivityForResult finishes
 	 */
@@ -110,29 +161,32 @@ public class ListSessionsActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		String message = "";
-		
-		dataSource.open();
+
+		sessionDataSource.open();
 
 		switch (requestCode) {
-		case EditSessionActivity.ADD_SESSION_REQUEST:
+		case ADD_SESSION_REQUEST:
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				popUp(R.string.message_done);
+				long session_id = data.getExtras().getLong("session_id");
 				updateSessionList();
+				listObservations(session_id);
 				break;
 
 			case Activity.RESULT_CANCELED:
+				updateSessionList();
 				popUp(R.string.message_canceled);
 				break;
 
 			default:
-				// TODO combine with resources %d
 				message = new String("Unknown resultCode " + resultCode
 						+ ". Try it again");
 				popUp(message);
 
 				break;
 			}
+		case EDIT_SESSION_REQUEST:
+			updateSessionList();
 			break;
 		default:
 			popUp(R.string.message_unknow_requestCode);
@@ -147,11 +201,11 @@ public class ListSessionsActivity extends Activity {
 	 * @param message
 	 */
 	private void popUp(int message) {
-		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 	}
 
 	private void popUp(CharSequence message) {
-		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 	}
 
 }
