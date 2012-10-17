@@ -83,6 +83,7 @@ public class ListSessionsActivity extends Activity {
 		// TODO show message if there is no sessions (invite to create some)
 
 		// Create the array adapter
+
 		adapter = new SessionsArrayAdapter(this,
 				R.layout.session_row, values);
 

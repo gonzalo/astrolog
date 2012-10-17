@@ -31,6 +31,7 @@
         <item quantity="other">&#160;in %d sessions</item>
     </plurals>
     <string name="at">&#160;at&#160;</string>
+
     
     <!-- EditSession -->
     <string name="error_title_length_0">You must enter a title</string>
